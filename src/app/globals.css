@@ -265,12 +265,12 @@ select.input-mystical {
   100% { left: 100%; }
 }
 
-/* Mobile nav overlay */
+/* Mobile nav overlay — z-45 sits above page content (z-10) but below navbar (z-50) */
 .nav-overlay {
   position: fixed;
   inset: 0;
   background: #0a0a2e;
-  z-index: 40;
+  z-index: 45;
 }
 
 /* Print Styles */
