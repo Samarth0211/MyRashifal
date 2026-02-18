@@ -1,3 +1,12 @@
+const LANG_INSTRUCTIONS = {
+  hi: 'IMPORTANT: Respond entirely in Hindi (Devanagari script). Use Hindi for all section headings, descriptions, and advice. Astrological terms (Rashi, Nakshatra, Dasha, Yoga, Graha names) should remain in their Sanskrit/Hindi form.\n\n',
+  mr: 'IMPORTANT: Respond entirely in Marathi (Devanagari script). Use Marathi for all section headings, descriptions, and advice. Astrological terms (Rashi, Nakshatra, Dasha, Yoga, Graha names) should remain in their Sanskrit/Hindi form.\n\n',
+};
+
+function getLangInstruction(lang) {
+  return LANG_INSTRUCTIONS[lang] || '';
+}
+
 const SYSTEM_PROMPT = `You are an expert Vedic astrologer with deep knowledge of Brihat Parashara Hora Shastra, Jataka Parijata, Phaladeepika, and Saravali. You provide detailed, personalized astrological analysis based on birth chart data.
 
 IMPORTANT: Planetary positions, houses, nakshatras, and dashas have already been accurately calculated using astronomical ephemeris (Lahiri ayanamsa, Equal house system). DO NOT recalculate or contradict these positions. Your role is to INTERPRET the given data using classical Vedic astrology principles.
@@ -11,10 +20,10 @@ Your interpretations must be:
 
 CRITICAL: Always respond in valid JSON format as specified in each prompt. No markdown, no code blocks — pure JSON only.`;
 
-export function getKundliInterpretationPrompt(birthDetails, calculatedData) {
+export function getKundliInterpretationPrompt(birthDetails, calculatedData, lang = 'en') {
   return {
     system: SYSTEM_PROMPT,
-    user: `The following Vedic birth chart has been accurately calculated using astronomical ephemeris (astronomy-engine library with Lahiri ayanamsa). Please INTERPRET this chart — do NOT recalculate any positions.
+    user: `${getLangInstruction(lang)}The following Vedic birth chart has been accurately calculated using astronomical ephemeris (astronomy-engine library with Lahiri ayanamsa). Please INTERPRET this chart — do NOT recalculate any positions.
 
 BIRTH DETAILS:
 Name: ${birthDetails.name}
@@ -84,13 +93,14 @@ Identify 3-5 yogas that are actually present in this chart based on the planetar
 }
 
 // Keep the old function name for backward compatibility but redirect
-export function getKundliPrompt(birthDetails) {
-  return getKundliInterpretationPrompt(birthDetails, {});
+export function getKundliPrompt(birthDetails, lang = 'en') {
+  return getKundliInterpretationPrompt(birthDetails, {}, lang);
 }
 
-export function getReportPrompt(kundliData, reportType) {
+export function getReportPrompt(kundliData, reportType, lang = 'en') {
+  const langPrefix = getLangInstruction(lang);
   const reportPrompts = {
-    career: `Based on the following accurately calculated Kundli data, generate a comprehensive Career & Wealth Report. The planetary positions below are computed from astronomical ephemeris — use them as-is for your interpretation.
+    career: `${langPrefix}Based on the following accurately calculated Kundli data, generate a comprehensive Career & Wealth Report. The planetary positions below are computed from astronomical ephemeris — use them as-is for your interpretation.
 
 ${JSON.stringify(kundliData, null, 2)}
 
@@ -131,7 +141,7 @@ Return JSON:
   "overallOutlook": "string"
 }`,
 
-    marriage: `Based on the following accurately calculated Kundli data, generate a comprehensive Marriage & Relationship Report:
+    marriage: `${langPrefix}Based on the following accurately calculated Kundli data, generate a comprehensive Marriage & Relationship Report:
 
 ${JSON.stringify(kundliData, null, 2)}
 
@@ -172,7 +182,7 @@ Return JSON:
   "overallOutlook": "string"
 }`,
 
-    health: `Based on the following accurately calculated Kundli data, generate a comprehensive Health & Wellness Report:
+    health: `${langPrefix}Based on the following accurately calculated Kundli data, generate a comprehensive Health & Wellness Report:
 
 ${JSON.stringify(kundliData, null, 2)}
 
@@ -209,7 +219,7 @@ Return JSON:
   "overallOutlook": "string"
 }`,
 
-    varshphal: `Based on the following accurately calculated Kundli data, generate a comprehensive Annual Varshphal Report for the current year:
+    varshphal: `${langPrefix}Based on the following accurately calculated Kundli data, generate a comprehensive Annual Varshphal Report for the current year:
 
 ${JSON.stringify(kundliData, null, 2)}
 
@@ -250,7 +260,7 @@ Return JSON:
   "overallOutlook": "string"
 }`,
 
-    education: `Based on the following accurately calculated Kundli data, generate a comprehensive Education & Competitive Exam Report:
+    education: `${langPrefix}Based on the following accurately calculated Kundli data, generate a comprehensive Education & Competitive Exam Report:
 
 ${JSON.stringify(kundliData, null, 2)}
 
@@ -283,7 +293,7 @@ Return JSON:
   "overallOutlook": "string"
 }`,
 
-    complete: `Based on the following accurately calculated Kundli data, generate a Complete Life Report covering all aspects of life:
+    complete: `${langPrefix}Based on the following accurately calculated Kundli data, generate a Complete Life Report covering all aspects of life:
 
 ${JSON.stringify(kundliData, null, 2)}
 
@@ -343,10 +353,10 @@ Return JSON:
   };
 }
 
-export function getMatchingInterpretationPrompt(boyChart, girlChart, boyDetails, girlDetails) {
+export function getMatchingInterpretationPrompt(boyChart, girlChart, boyDetails, girlDetails, lang = 'en') {
   return {
     system: SYSTEM_PROMPT,
-    user: `Perform Ashtakoot Gun Milan for the following couple. The birth charts have been accurately calculated using astronomical ephemeris. Use the given Moon signs and nakshatras for the matching — do NOT recalculate them.
+    user: `${getLangInstruction(lang)}Perform Ashtakoot Gun Milan for the following couple. The birth charts have been accurately calculated using astronomical ephemeris. Use the given Moon signs and nakshatras for the matching — do NOT recalculate them.
 
 BOY:
 Name: ${boyDetails.name}
@@ -408,18 +418,18 @@ Perform the 8 Kuta (Ashtakoot) matching based on their Moon signs and nakshatras
 }
 
 // Keep backward compatibility
-export function getMatchingPrompt(boyDetails, girlDetails) {
-  return getMatchingInterpretationPrompt({}, {}, boyDetails, girlDetails);
+export function getMatchingPrompt(boyDetails, girlDetails, lang = 'en') {
+  return getMatchingInterpretationPrompt({}, {}, boyDetails, girlDetails, lang);
 }
 
-export function getMuhuratPrompt(eventType, startDate, endDate, birthDetails) {
+export function getMuhuratPrompt(eventType, startDate, endDate, birthDetails, lang = 'en') {
   const birthContext = birthDetails
     ? `\nThe person requesting the muhurat was born on ${birthDetails.dob} at ${birthDetails.tob} in ${birthDetails.pob}. Consider their chart for personalized muhurat selection.`
     : '';
 
   return {
     system: SYSTEM_PROMPT,
-    user: `Find auspicious Shubh Muhurats for the following event:
+    user: `${getLangInstruction(lang)}Find auspicious Shubh Muhurats for the following event:
 
 Event Type: ${eventType}
 Date Range: ${startDate} to ${endDate}${birthContext}
@@ -443,10 +453,10 @@ Find 5-8 of the best auspicious dates/times within this range. Return JSON:
   };
 }
 
-export function getDailyRashifalPrompt(rashi, date) {
+export function getDailyRashifalPrompt(rashi, date, lang = 'en') {
   return {
     system: SYSTEM_PROMPT,
-    user: `Generate today's daily Rashifal (horoscope) for ${rashi} for the date ${date}.
+    user: `${getLangInstruction(lang)}Generate today's daily Rashifal (horoscope) for ${rashi} for the date ${date}.
 
 Consider current planetary transits and provide personalized predictions. Return JSON:
 {
@@ -466,10 +476,10 @@ Consider current planetary transits and provide personalized predictions. Return
   };
 }
 
-export function getAskQuestionPrompt(question, kundliData) {
+export function getAskQuestionPrompt(question, kundliData, lang = 'en') {
   return {
     system: SYSTEM_PROMPT,
-    user: `A person has asked the following life question. Answer it based on their Vedic birth chart data (positions accurately calculated via astronomical ephemeris):
+    user: `${getLangInstruction(lang)}A person has asked the following life question. Answer it based on their Vedic birth chart data (positions accurately calculated via astronomical ephemeris):
 
 Question: "${question}"
 

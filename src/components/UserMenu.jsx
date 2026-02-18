@@ -2,8 +2,10 @@
 
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { useState, useRef, useEffect } from 'react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function UserMenu() {
+  const { t } = useLanguage();
   const { data: session, status } = useSession();
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
@@ -31,7 +33,7 @@ export default function UserMenu() {
         onClick={() => signIn('google')}
         className="text-sm font-semibold text-text-primary hover:text-gold-primary transition-colors px-3 py-1.5 border border-[#2a2a5e] rounded-lg hover:border-gold-primary"
       >
-        Sign In
+        {t('auth.signIn')}
       </button>
     );
   }
@@ -70,7 +72,7 @@ export default function UserMenu() {
             onClick={() => { setOpen(false); signOut(); }}
             className="w-full text-left px-4 py-3 text-sm text-text-secondary hover:text-accent-red hover:bg-bg-primary/50 transition-colors cursor-pointer"
           >
-            Sign Out
+            {t('auth.signOut')}
           </button>
         </div>
       )}

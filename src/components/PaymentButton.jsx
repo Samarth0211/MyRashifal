@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import { useSession, signIn } from 'next-auth/react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function PaymentButton({ amount, reportType, reportName, onPaymentSuccess, disabled, className }) {
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
   const { data: session, status } = useSession();
 
@@ -56,10 +58,10 @@ export default function PaymentButton({ amount, reportType, reportName, onPaymen
             if (verifyData.verified) {
               onPaymentSuccess(response.razorpay_payment_id);
             } else {
-              alert('Payment verification failed. Please contact support.');
+              alert(t('payment.verifyFailed'));
             }
           } catch {
-            alert('Payment verification error. Please contact support.');
+            alert(t('payment.verifyError'));
           }
           setLoading(false);
         },
@@ -76,13 +78,13 @@ export default function PaymentButton({ amount, reportType, reportName, onPaymen
 
       const rzp = new window.Razorpay(options);
       rzp.on('payment.failed', function () {
-        alert('Payment failed. Please try again.');
+        alert(t('payment.failed'));
         setLoading(false);
       });
       rzp.open();
     } catch (error) {
       console.error('Payment error:', error);
-      alert('Something went wrong. Please try again.');
+      alert(t('payment.error'));
       setLoading(false);
     }
   };
@@ -93,7 +95,7 @@ export default function PaymentButton({ amount, reportType, reportName, onPaymen
       disabled={loading || disabled}
       className={className || 'btn-gold w-full'}
     >
-      {loading ? 'Processing...' : !session ? `Sign in to Unlock ₹${amount}` : `Unlock for ₹${amount}`}
+      {loading ? t('payment.processing') : !session ? t('payment.signInToUnlock', { amount }) : t('payment.unlockFor', { amount })}
     </button>
   );
 }

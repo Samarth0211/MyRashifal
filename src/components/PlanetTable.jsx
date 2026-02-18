@@ -1,8 +1,10 @@
 'use client';
 
 import { PLANETS } from '@/lib/constants';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function PlanetTable({ planets }) {
+  const { t } = useLanguage();
   if (!planets || planets.length === 0) return null;
 
   const getPlanetDisplay = (planetId) => {
@@ -27,13 +29,13 @@ export default function PlanetTable({ planets }) {
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-border-custom">
-            <th className="text-left py-3 px-2 text-gold-primary font-heading">Planet</th>
-            <th className="text-left py-3 px-2 text-gold-primary font-heading">Sign</th>
-            <th className="text-center py-3 px-2 text-gold-primary font-heading">House</th>
-            <th className="text-left py-3 px-2 text-gold-primary font-heading hidden sm:table-cell">Nakshatra</th>
-            <th className="text-center py-3 px-2 text-gold-primary font-heading">Degree</th>
-            <th className="text-center py-3 px-2 text-gold-primary font-heading hidden sm:table-cell">Dignity</th>
-            <th className="text-center py-3 px-2 text-gold-primary font-heading">R</th>
+            <th className="text-left py-3 px-2 text-gold-primary font-heading">{t('table.planet')}</th>
+            <th className="text-left py-3 px-2 text-gold-primary font-heading">{t('table.sign')}</th>
+            <th className="text-center py-3 px-2 text-gold-primary font-heading">{t('table.house')}</th>
+            <th className="text-left py-3 px-2 text-gold-primary font-heading hidden sm:table-cell">{t('table.nakshatra')}</th>
+            <th className="text-center py-3 px-2 text-gold-primary font-heading">{t('table.degree')}</th>
+            <th className="text-center py-3 px-2 text-gold-primary font-heading hidden sm:table-cell">{t('table.dignity')}</th>
+            <th className="text-center py-3 px-2 text-gold-primary font-heading">{t('table.retrograde')}</th>
           </tr>
         </thead>
         <tbody>

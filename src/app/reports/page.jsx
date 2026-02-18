@@ -7,72 +7,78 @@ import ReportCard from '@/components/ReportCard';
 import LoadingScreen from '@/components/LoadingScreen';
 import { savePurchase, hasPurchased, saveReport, getReport } from '@/lib/storage';
 import { PRICING } from '@/lib/constants';
+import { useLanguage } from '@/contexts/LanguageContext';
 
-const REPORT_DETAILS = {
-  career: {
-    description: 'Comprehensive career guidance based on your 10th house, Dashamsa chart, Dhana Yogas, and current dasha impact.',
-    features: [
-      '10th house lord analysis & career indications',
-      'Dhana Yoga (wealth combinations) analysis',
-      'Best career fields for your chart',
-      'Next 12 months career forecast',
-      'Remedies for career obstacles',
-    ],
-  },
-  marriage: {
-    description: 'Deep analysis of your 7th house, Manglik status, Venus placement, and marriage timing based on dasha periods.',
-    features: [
-      '7th house analysis & spouse characteristics',
-      'Manglik Dosha check with severity & remedies',
-      'Marriage timing prediction (dasha-based)',
-      'Relationship strengths & challenges',
-      'Remedies for relationship harmony',
-    ],
-  },
-  health: {
-    description: 'Health insights based on 6th and 8th house analysis, vulnerable areas, mental health indicators, and Ayurvedic constitution.',
-    features: [
-      '6th & 8th house health analysis',
-      'Vulnerable body areas identification',
-      'Mental health indicators',
-      'Ayurvedic constitution (Prakriti)',
-      'Periods requiring extra health caution',
-    ],
-  },
-  varshphal: {
-    description: 'Complete annual forecast with Solar Return chart analysis, Muntha position, and month-by-month predictions.',
-    features: [
-      'Varsha Kundli (Solar Return) analysis',
-      'Month-by-month forecast for all 12 months',
-      'Best months for career & relationships',
-      'Challenging periods with remedies',
-      'Year-end summary & key takeaway',
-    ],
-  },
-  education: {
-    description: 'Education prospects based on 4th and 5th house analysis, Mercury/Jupiter strength, and competitive exam indicators.',
-    features: [
-      '4th & 5th house analysis',
-      'Mercury & Jupiter strength assessment',
-      'Best periods for studies & exams',
-      'Foreign education prospects',
-      'Competitive exam success indicators',
-    ],
-  },
-  complete: {
-    description: 'ALL reports combined plus bonus: past life karma analysis and spiritual growth indicators. Best value!',
-    features: [
-      'All 5 individual reports included',
-      'Past life karma analysis (bonus)',
-      'Spiritual growth indicators (bonus)',
-      'Comprehensive life overview',
-      'Save ₹167 vs buying individually',
-    ],
-  },
-};
+const REPORT_TYPES = ['career', 'marriage', 'health', 'varshphal', 'education', 'complete'];
+
+function getReportDetails(t) {
+  return {
+    career: {
+      description: t('reports.career.desc'),
+      features: [
+        t('reports.career.f1'),
+        t('reports.career.f2'),
+        t('reports.career.f3'),
+        t('reports.career.f4'),
+        t('reports.career.f5'),
+      ],
+    },
+    marriage: {
+      description: t('reports.marriage.desc'),
+      features: [
+        t('reports.marriage.f1'),
+        t('reports.marriage.f2'),
+        t('reports.marriage.f3'),
+        t('reports.marriage.f4'),
+        t('reports.marriage.f5'),
+      ],
+    },
+    health: {
+      description: t('reports.health.desc'),
+      features: [
+        t('reports.health.f1'),
+        t('reports.health.f2'),
+        t('reports.health.f3'),
+        t('reports.health.f4'),
+        t('reports.health.f5'),
+      ],
+    },
+    varshphal: {
+      description: t('reports.varshphal.desc'),
+      features: [
+        t('reports.varshphal.f1'),
+        t('reports.varshphal.f2'),
+        t('reports.varshphal.f3'),
+        t('reports.varshphal.f4'),
+        t('reports.varshphal.f5'),
+      ],
+    },
+    education: {
+      description: t('reports.education.desc'),
+      features: [
+        t('reports.education.f1'),
+        t('reports.education.f2'),
+        t('reports.education.f3'),
+        t('reports.education.f4'),
+        t('reports.education.f5'),
+      ],
+    },
+    complete: {
+      description: t('reports.complete.desc'),
+      features: [
+        t('reports.complete.f1'),
+        t('reports.complete.f2'),
+        t('reports.complete.f3'),
+        t('reports.complete.f4'),
+        t('reports.complete.f5'),
+      ],
+    },
+  };
+}
 
 export default function ReportsPage() {
   const { data: session, status } = useSession();
+  const { t, lang } = useLanguage();
   const [kundli, setKundli] = useState(null);
   const [activeReport, setActiveReport] = useState(null);
   const [reportData, setReportData] = useState(null);
@@ -81,6 +87,8 @@ export default function ReportsPage() {
   const [error, setError] = useState('');
   const [dbPurchases, setDbPurchases] = useState({});
   const [dbReports, setDbReports] = useState({});
+
+  const reportDetails = getReportDetails(t);
 
   // Load kundli, purchases & reports from DB for logged-in users
   useEffect(() => {
@@ -119,7 +127,7 @@ export default function ReportsPage() {
       const res = await fetch('/api/generate-report', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ kundliData: kundli, reportType }),
+        body: JSON.stringify({ kundliData: kundli, reportType, lang }),
       });
       if (!res.ok) throw new Error('Failed to generate report');
       const data = await res.json();
@@ -127,7 +135,7 @@ export default function ReportsPage() {
       setReportData(data);
       setActiveReport(reportType);
     } catch {
-      setError('Failed to generate report. Please try again.');
+      setError(t('reports.error'));
     } finally {
       setLoading(false);
     }
@@ -156,7 +164,7 @@ export default function ReportsPage() {
   if (loadingData) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center">
-        <LoadingScreen message="Loading your data..." />
+        <LoadingScreen message={t('reports.loadingData')} />
       </div>
     );
   }
@@ -167,15 +175,15 @@ export default function ReportsPage() {
       <div className="max-w-lg mx-auto px-4 py-20 text-center">
         <span className="text-6xl block mb-6">☉</span>
         <h1 className="text-3xl font-heading font-bold mb-4">
-          Generate Your Kundli First
+          {t('reports.generateFirst')}
         </h1>
         <p className="text-text-secondary mb-8">
           {session?.user
-            ? "We need your birth chart to generate personalized reports. It's free and takes less than a minute."
-            : "Sign in and generate your birth chart to access personalized premium reports."}
+            ? t('reports.noKundliAuth')
+            : t('reports.noKundliAnon')}
         </p>
         <Link href="/kundli" className="btn-gold no-underline inline-block">
-          Generate Free Kundli →
+          {t('reports.generateFree')}
         </Link>
       </div>
     );
@@ -185,7 +193,7 @@ export default function ReportsPage() {
   if (loading) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center">
-        <LoadingScreen message="Generating your detailed report..." />
+        <LoadingScreen message={t('reports.generating')} />
       </div>
     );
   }
@@ -195,32 +203,29 @@ export default function ReportsPage() {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8 animate-fade-in">
         <button onClick={handleBack} className="text-gold-primary text-sm mb-6 hover:underline">
-          ← Back to all reports
+          {t('reports.backToAll')}
         </button>
 
         {/* Report Header */}
         <div className="text-center mb-8">
           <span className="text-5xl block mb-3">{PRICING[activeReport]?.icon}</span>
           <h1 className="text-3xl font-heading font-bold text-gold-gradient mb-2">
-            {reportData.title || PRICING[activeReport]?.name}
+            {reportData.title || t(`pricing.${activeReport}`)}
           </h1>
           <p className="text-text-secondary text-sm">
-            Generated for {kundli.birthDetails?.name} | {kundli.birthDetails?.dob}
+            {t('reports.generatedFor', { name: kundli.birthDetails?.name, dob: kundli.birthDetails?.dob })}
           </p>
         </div>
 
         {/* Disclaimer */}
         <div className="highlight-box text-xs text-text-secondary leading-relaxed mb-8">
-          This report is generated using classical Vedic astrology principles from Brihat Parashara
-          Hora Shastra and other authoritative Jyotish texts. These insights are intended for spiritual
-          guidance and self-reflection purposes only. They should not be used as a substitute for
-          professional medical, legal, financial, or psychological advice.
+          {t('reports.disclaimer')}
         </div>
 
         {/* Highlights */}
         {reportData.highlights && reportData.highlights.length > 0 && (
           <div className="card-mystical mb-8">
-            <h2 className="font-heading text-lg font-bold text-gold-primary mb-3">Key Highlights</h2>
+            <h2 className="font-heading text-lg font-bold text-gold-primary mb-3">{t('reports.keyHighlights')}</h2>
             <ul className="space-y-2">
               {reportData.highlights.map((h, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-text-primary">
@@ -245,7 +250,7 @@ export default function ReportsPage() {
         {/* Overall Outlook */}
         {reportData.overallOutlook && (
           <div className="highlight-box mt-8">
-            <h3 className="font-heading text-lg font-bold text-gold-primary mb-2">Overall Outlook</h3>
+            <h3 className="font-heading text-lg font-bold text-gold-primary mb-2">{t('reports.overallOutlook')}</h3>
             <p className="text-text-primary text-sm leading-relaxed">{reportData.overallOutlook}</p>
           </div>
         )}
@@ -256,10 +261,10 @@ export default function ReportsPage() {
             onClick={() => window.print()}
             className="btn-outline-gold"
           >
-            Download as PDF
+            {t('reports.downloadPdf')}
           </button>
           <button onClick={handleBack} className="btn-outline-gold">
-            View Other Reports
+            {t('reports.viewOther')}
           </button>
         </div>
       </div>
@@ -271,10 +276,10 @@ export default function ReportsPage() {
     <div className="max-w-6xl mx-auto px-4 py-12">
       <div className="text-center mb-10">
         <h1 className="text-3xl sm:text-4xl font-heading font-bold mb-3">
-          Premium <span className="text-gold-gradient">Reports</span>
+          <span className="text-gold-gradient">{t('reports.title')}</span>
         </h1>
         <p className="text-text-secondary">
-          Unlock detailed life insights based on {kundli.birthDetails?.name}&apos;s birth chart
+          {t('reports.subtitle', { name: kundli.birthDetails?.name })}
         </p>
       </div>
 
@@ -285,13 +290,14 @@ export default function ReportsPage() {
       )}
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {Object.entries(REPORT_DETAILS).map(([type, details]) => {
+        {REPORT_TYPES.map((type) => {
           const pricing = PRICING[type];
+          const details = reportDetails[type];
           return (
             <ReportCard
               key={type}
               icon={pricing.icon}
-              title={pricing.name}
+              title={t(`pricing.${type}`)}
               description={details.description}
               price={pricing.price}
               originalPrice={pricing.originalPrice}
@@ -300,7 +306,7 @@ export default function ReportsPage() {
               reportType={type}
               onPaymentSuccess={(paymentId) => handlePaymentSuccess(type, paymentId)}
               onViewReport={() => handleViewReport(type)}
-              badge={type === 'complete' ? 'Best Value — Save ₹167' : null}
+              badge={type === 'complete' ? t('reports.bestValue') : null}
             />
           );
         })}

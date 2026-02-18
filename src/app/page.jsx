@@ -1,8 +1,13 @@
+'use client';
+
 import Link from 'next/link';
 import PricingCards from '@/components/PricingCards';
 import Testimonials from '@/components/Testimonials';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function HomePage() {
+  const { t } = useLanguage();
+
   return (
     <>
       {/* ===== HERO SECTION ===== */}
@@ -14,7 +19,7 @@ export default function HomePage() {
         <div className="text-center max-w-4xl mx-auto relative z-10 animate-fade-in">
           {/* Badge */}
           <div className="inline-block bg-gold-primary/10 border border-gold-primary/30 rounded-full px-4 py-1.5 text-gold-light text-sm mb-6">
-            ☉ Rooted in Brihat Parashara Hora Shastra
+            {t('home.badge')}
           </div>
 
           {/* Title */}
@@ -24,22 +29,22 @@ export default function HomePage() {
 
           {/* Tagline */}
           <p className="text-xl sm:text-2xl text-text-secondary font-light mb-8 max-w-2xl mx-auto text-balance">
-            Your Stars, Your Story — Personalized Vedic Astrology
+            {t('home.tagline')}
           </p>
 
           {/* CTA */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/kundli" className="btn-gold text-lg no-underline inline-block">
-              Generate Your Free Kundli →
+              {t('home.ctaFreeKundli')}
             </Link>
             <Link href="/rashifal" className="btn-outline-gold text-lg no-underline inline-block">
-              Daily Rashifal
+              {t('home.ctaDailyRashifal')}
             </Link>
           </div>
 
           {/* Social Proof */}
           <p className="text-text-secondary text-sm mt-8">
-            Trusted by 10,000+ users across India
+            {t('home.socialProof')}
           </p>
         </div>
       </section>
@@ -48,10 +53,10 @@ export default function HomePage() {
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl sm:text-4xl font-heading font-bold text-center mb-4">
-            Why <span className="text-gold-gradient">MyRashifal+</span>?
+            {t('home.whyTitle')}
           </h2>
           <p className="text-text-secondary text-center mb-12 max-w-xl mx-auto">
-            Not your generic horoscope app. Every insight is calculated specifically for you.
+            {t('home.whySubtitle')}
           </p>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -60,9 +65,9 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-gold-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-3xl">🔭</span>
               </div>
-              <h3 className="font-heading text-xl font-bold mb-3">Precise Calculations</h3>
+              <h3 className="font-heading text-xl font-bold mb-3">{t('home.preciseTitle')}</h3>
               <p className="text-text-secondary text-sm leading-relaxed">
-                Based on astronomical ephemeris data with Lahiri ayanamsa. Accurate planetary positions down to the arcminute.
+                {t('home.preciseDesc')}
               </p>
             </div>
 
@@ -71,9 +76,9 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-gold-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-3xl">📜</span>
               </div>
-              <h3 className="font-heading text-xl font-bold mb-3">Classical Methodology</h3>
+              <h3 className="font-heading text-xl font-bold mb-3">{t('home.classicalTitle')}</h3>
               <p className="text-text-secondary text-sm leading-relaxed">
-                Rooted in Brihat Parashara Hora Shastra, Phaladeepika, and Saravali. Time-tested Vedic wisdom, not Western pop astrology.
+                {t('home.classicalDesc')}
               </p>
             </div>
 
@@ -82,9 +87,9 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-gold-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-3xl">🎯</span>
               </div>
-              <h3 className="font-heading text-xl font-bold mb-3">Deeply Personal</h3>
+              <h3 className="font-heading text-xl font-bold mb-3">{t('home.personalTitle')}</h3>
               <p className="text-text-secondary text-sm leading-relaxed">
-                Every insight tailored to YOUR exact birth chart. No two reports are alike — because no two charts are alike.
+                {t('home.personalDesc')}
               </p>
             </div>
           </div>
@@ -95,27 +100,27 @@ export default function HomePage() {
       <section className="py-20 px-4 bg-bg-secondary/50">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl sm:text-4xl font-heading font-bold text-center mb-12">
-            How It Works
+            {t('home.howTitle')}
           </h2>
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
                 step: '01',
-                title: 'Enter Birth Details',
-                desc: 'Provide your name, date, time, and place of birth. Accurate time gives the best results.',
+                titleKey: 'home.step1Title',
+                descKey: 'home.step1Desc',
                 icon: '📝',
               },
               {
                 step: '02',
-                title: 'Get Your Kundli',
-                desc: 'Receive your complete Vedic birth chart with planetary positions, houses, dashas, and personality insights — instantly and free.',
+                titleKey: 'home.step2Title',
+                descKey: 'home.step2Desc',
                 icon: '☉',
               },
               {
                 step: '03',
-                title: 'Unlock Life Reports',
-                desc: 'Dive deeper with premium reports on career, marriage, health, and more. Detailed, personalized, and actionable.',
+                titleKey: 'home.step3Title',
+                descKey: 'home.step3Desc',
                 icon: '✨',
               },
             ].map((item) => (
@@ -126,15 +131,15 @@ export default function HomePage() {
                     {item.step}
                   </span>
                 </div>
-                <h3 className="font-heading text-xl font-bold mb-3">{item.title}</h3>
-                <p className="text-text-secondary text-sm leading-relaxed">{item.desc}</p>
+                <h3 className="font-heading text-xl font-bold mb-3">{t(item.titleKey)}</h3>
+                <p className="text-text-secondary text-sm leading-relaxed">{t(item.descKey)}</p>
               </div>
             ))}
           </div>
 
           <div className="text-center mt-12">
             <Link href="/kundli" className="btn-gold text-lg no-underline inline-block">
-              Start Now — It&apos;s Free →
+              {t('home.startNow')}
             </Link>
           </div>
         </div>
@@ -144,23 +149,23 @@ export default function HomePage() {
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl sm:text-4xl font-heading font-bold text-center mb-4">
-            Everything You Need
+            {t('home.featuresTitle')}
           </h2>
           <p className="text-text-secondary text-center mb-12 max-w-xl mx-auto">
-            From daily horoscopes to life-changing insights — all powered by classical Vedic astrology.
+            {t('home.featuresSubtitle')}
           </p>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { icon: '☉', title: 'Janam Kundli', desc: 'Complete birth chart with all 12 houses and 9 planets', href: '/kundli', free: true },
-              { icon: '📰', title: 'Daily Rashifal', desc: 'Personalized daily predictions for all 12 rashis', href: '/rashifal', free: true },
-              { icon: '💼', title: 'Career Report', desc: 'Career guidance based on 10th house and Dashamsa chart', href: '/reports', free: false },
-              { icon: '💍', title: 'Kundli Matching', desc: 'Ashtakoot Gun Milan with full 36-point analysis', href: '/matching', free: false },
-              { icon: '🕐', title: 'Shubh Muhurat', desc: 'Find auspicious dates for marriage, business, and more', href: '/muhurat', free: false },
-              { icon: '❓', title: 'Ask a Question', desc: 'Get chart-based answers to your life questions', href: '/ask', free: false },
+              { icon: '☉', titleKey: 'home.featureJanamKundli', descKey: 'home.featureJanamKundliDesc', href: '/kundli', free: true },
+              { icon: '📰', titleKey: 'home.featureDailyRashifal', descKey: 'home.featureDailyRashifalDesc', href: '/rashifal', free: true },
+              { icon: '💼', titleKey: 'home.featureCareer', descKey: 'home.featureCareerDesc', href: '/reports', free: false },
+              { icon: '💍', titleKey: 'home.featureMatching', descKey: 'home.featureMatchingDesc', href: '/matching', free: false },
+              { icon: '🕐', titleKey: 'home.featureMuhurat', descKey: 'home.featureMuhuratDesc', href: '/muhurat', free: false },
+              { icon: '❓', titleKey: 'home.featureAsk', descKey: 'home.featureAskDesc', href: '/ask', free: false },
             ].map((item) => (
               <Link
-                key={item.title}
+                key={item.titleKey}
                 href={item.href}
                 className="card-mystical no-underline group"
               >
@@ -169,15 +174,15 @@ export default function HomePage() {
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-heading text-lg font-bold group-hover:text-gold-primary transition-colors">
-                        {item.title}
+                        {t(item.titleKey)}
                       </h3>
                       {item.free && (
                         <span className="text-accent-green text-xs bg-accent-green/10 px-2 py-0.5 rounded-full">
-                          Free
+                          {t('home.free')}
                         </span>
                       )}
                     </div>
-                    <p className="text-text-secondary text-sm">{item.desc}</p>
+                    <p className="text-text-secondary text-sm">{t(item.descKey)}</p>
                   </div>
                 </div>
               </Link>
@@ -190,10 +195,10 @@ export default function HomePage() {
       <section className="py-20 px-4 bg-bg-secondary/50">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl sm:text-4xl font-heading font-bold text-center mb-4">
-            Simple, Transparent Pricing
+            {t('home.pricingTitle')}
           </h2>
           <p className="text-text-secondary text-center mb-12 max-w-xl mx-auto">
-            Start free. Upgrade when you&apos;re ready for deeper insights.
+            {t('home.pricingSubtitle')}
           </p>
           <PricingCards />
         </div>
@@ -203,10 +208,10 @@ export default function HomePage() {
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl sm:text-4xl font-heading font-bold text-center mb-4">
-            What Our Users Say
+            {t('home.testimonialsTitle')}
           </h2>
           <p className="text-text-secondary text-center mb-12">
-            Real stories from real people who found clarity in the stars.
+            {t('home.testimonialsSubtitle')}
           </p>
           <Testimonials />
         </div>
@@ -216,13 +221,13 @@ export default function HomePage() {
       <section className="py-20 px-4">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl sm:text-4xl font-heading font-bold mb-6">
-            Ready to Discover Your <span className="text-gold-gradient">Cosmic Blueprint</span>?
+            {t('home.ctaTitle')}
           </h2>
           <p className="text-text-secondary mb-8">
-            Your birth chart holds the answers. Start your journey today — completely free.
+            {t('home.ctaDesc')}
           </p>
           <Link href="/kundli" className="btn-gold text-lg no-underline inline-block">
-            Generate Your Free Kundli ✨
+            {t('home.ctaButton')}
           </Link>
         </div>
       </section>

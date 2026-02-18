@@ -6,7 +6,7 @@ import { saveReportToDB, getReportFromDB } from '@/lib/db';
 
 export async function POST(request) {
   try {
-    const { kundliData, reportType } = await request.json();
+    const { kundliData, reportType, lang = 'en' } = await request.json();
 
     if (!kundliData || !reportType) {
       return NextResponse.json(
@@ -36,7 +36,7 @@ export async function POST(request) {
 
     // Generate fresh report via Claude
     const maxTokens = reportType === 'complete' ? 8000 : 5000;
-    const { system, user } = getReportPrompt(kundliData, reportType);
+    const { system, user } = getReportPrompt(kundliData, reportType, lang);
     const response = await callClaude(system, user, maxTokens);
     const reportData = parseClaudeJSON(response);
 

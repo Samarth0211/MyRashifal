@@ -5,21 +5,23 @@ import PaymentButton from '@/components/PaymentButton';
 import LoadingScreen from '@/components/LoadingScreen';
 import { PRICING } from '@/lib/constants';
 import { savePurchase } from '@/lib/storage';
+import { useLanguage } from '@/contexts/LanguageContext';
 
-const EVENT_TYPES = [
-  'Marriage (Vivah)',
-  'Griha Pravesh (Housewarming)',
-  'Business Start (Vyapar Arambh)',
-  'Vehicle Purchase (Vahan Kharid)',
-  'Mundan (First Haircut)',
-  'Naming Ceremony (Namkaran)',
-  'Property Purchase',
-  'Travel (Yatra)',
-  'Gold Purchase',
-  'Education Start (Vidya Arambh)',
+const EVENT_KEYS = [
+  'muhurat.eventMarriage',
+  'muhurat.eventGrihaPravesh',
+  'muhurat.eventBusiness',
+  'muhurat.eventVehicle',
+  'muhurat.eventMundan',
+  'muhurat.eventNaming',
+  'muhurat.eventProperty',
+  'muhurat.eventTravel',
+  'muhurat.eventGold',
+  'muhurat.eventEducation',
 ];
 
 export default function MuhuratPage() {
+  const { t, lang } = useLanguage();
   const [eventType, setEventType] = useState('');
   const [dateRange, setDateRange] = useState(30);
   const [step, setStep] = useState('form'); // form | pay | loading | results
@@ -46,6 +48,7 @@ export default function MuhuratPage() {
           eventType,
           startDate: today,
           endDate: getEndDate(),
+          lang,
         }),
       });
       if (!res.ok) throw new Error('Failed');
@@ -71,10 +74,10 @@ export default function MuhuratPage() {
     <div className="max-w-4xl mx-auto px-4 py-12">
       <div className="text-center mb-10">
         <h1 className="text-3xl sm:text-4xl font-heading font-bold mb-3">
-          Shubh <span className="text-gold-gradient">Muhurat</span>
+          {t('muhurat.title')}
         </h1>
         <p className="text-text-secondary">
-          Find the most auspicious dates and times for important events
+          {t('muhurat.subtitle')}
         </p>
         <p className="text-gold-light text-sm mt-1">₹{PRICING.muhurat.price}</p>
       </div>
@@ -85,22 +88,22 @@ export default function MuhuratPage() {
           <div className="card-mystical space-y-5">
             {/* Event Type */}
             <div>
-              <label className="block text-text-secondary text-sm mb-1">Event Type</label>
+              <label className="block text-text-secondary text-sm mb-1">{t('muhurat.eventType')}</label>
               <select
                 value={eventType}
                 onChange={(e) => setEventType(e.target.value)}
                 className="input-mystical"
               >
-                <option value="" disabled>Select an event...</option>
-                {EVENT_TYPES.map((type) => (
-                  <option key={type} value={type}>{type}</option>
+                <option value="" disabled>{t('muhurat.selectEvent')}</option>
+                {EVENT_KEYS.map((key) => (
+                  <option key={key} value={t(key)}>{t(key)}</option>
                 ))}
               </select>
             </div>
 
             {/* Date Range */}
             <div>
-              <label className="block text-text-secondary text-sm mb-2">Date Range</label>
+              <label className="block text-text-secondary text-sm mb-2">{t('muhurat.dateRange')}</label>
               <div className="flex gap-3">
                 {[30, 60, 90].map((days) => (
                   <button
@@ -112,7 +115,7 @@ export default function MuhuratPage() {
                         : 'bg-bg-card border border-border-custom text-text-secondary hover:border-gold-primary/50'
                     }`}
                   >
-                    Next {days} days
+                    {t(`muhurat.next${days}`)}
                   </button>
                 ))}
               </div>
@@ -124,7 +127,7 @@ export default function MuhuratPage() {
               disabled={!eventType}
               className="btn-gold w-full"
             >
-              Find Shubh Muhurat ✨
+              {t('muhurat.findMuhurat')}
             </button>
           </div>
         </div>
@@ -135,12 +138,12 @@ export default function MuhuratPage() {
         <div className="max-w-lg mx-auto text-center animate-fade-in">
           <div className="card-mystical">
             <span className="text-5xl block mb-4">🕐</span>
-            <h2 className="font-heading text-xl font-bold mb-2">Find Auspicious Dates</h2>
+            <h2 className="font-heading text-xl font-bold mb-2">{t('muhurat.findTitle')}</h2>
             <p className="text-text-secondary text-sm mb-2">
               <strong>{eventType}</strong>
             </p>
             <p className="text-text-secondary text-sm mb-6">
-              Next {dateRange} days from today
+              {t('common.nextDaysFrom', { days: dateRange })}
             </p>
             {error && <p className="text-accent-red text-sm mb-4">{error}</p>}
             <PaymentButton
@@ -153,7 +156,7 @@ export default function MuhuratPage() {
               onClick={() => setStep('form')}
               className="text-gold-primary text-sm mt-4 hover:underline block mx-auto"
             >
-              ← Change selection
+              {t('muhurat.changeSelection')}
             </button>
           </div>
         </div>
@@ -162,7 +165,7 @@ export default function MuhuratPage() {
       {/* Loading */}
       {step === 'loading' && (
         <div className="min-h-[50vh] flex items-center justify-center">
-          <LoadingScreen message="Searching for auspicious timings..." />
+          <LoadingScreen message={t('muhurat.searching')} />
         </div>
       )}
 
@@ -171,10 +174,10 @@ export default function MuhuratPage() {
         <div className="animate-fade-in">
           <div className="text-center mb-8">
             <h2 className="font-heading text-2xl font-bold text-gold-gradient mb-2">
-              Auspicious Dates for {results.eventType || eventType}
+              {t('muhurat.resultsTitle', { event: results.eventType || eventType })}
             </h2>
             <p className="text-text-secondary text-sm">
-              Sorted from most to least auspicious
+              {t('muhurat.sorted')}
             </p>
           </div>
 
@@ -203,7 +206,7 @@ export default function MuhuratPage() {
                     <span className="text-sm">{renderStars(muhurat.rating || 3)}</span>
                   </div>
                   <div className="flex flex-wrap gap-3 text-xs text-text-secondary mb-2">
-                    <span>Tithi: {muhurat.tithi}</span>
+                    <span>{t('muhurat.tithi')}: {muhurat.tithi}</span>
                     <span>Nakshatra: {muhurat.nakshatra}</span>
                   </div>
                   <div className="bg-accent-green/10 border border-accent-green/20 rounded px-3 py-1.5 inline-block mb-2">
@@ -220,7 +223,7 @@ export default function MuhuratPage() {
           {/* General Advice */}
           {results.generalAdvice && (
             <div className="highlight-box mb-8">
-              <h3 className="font-heading text-lg font-bold text-gold-primary mb-2">General Advice</h3>
+              <h3 className="font-heading text-lg font-bold text-gold-primary mb-2">{t('muhurat.generalAdvice')}</h3>
               <p className="text-text-primary text-sm leading-relaxed">{results.generalAdvice}</p>
             </div>
           )}
@@ -228,10 +231,10 @@ export default function MuhuratPage() {
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10 no-print">
             <button onClick={() => window.print()} className="btn-outline-gold">
-              Download as PDF
+              {t('common.downloadPdf')}
             </button>
             <button onClick={handleReset} className="btn-outline-gold">
-              Find Another Muhurat
+              {t('muhurat.findAnother')}
             </button>
           </div>
         </div>

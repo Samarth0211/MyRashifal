@@ -6,7 +6,7 @@ import { findCity } from '@/lib/cities';
 
 export async function POST(request) {
   try {
-    const { boy, girl } = await request.json();
+    const { boy, girl, lang = 'en' } = await request.json();
 
     if (!boy?.name || !boy?.dob || !boy?.tob || !boy?.pob) {
       return NextResponse.json(
@@ -29,7 +29,7 @@ export async function POST(request) {
     const girlChart = calculateKundli(girl.dob, girl.tob, girlCity.lat, girlCity.lon, girlCity.tzOffset);
 
     // Send accurate charts to Claude for gun milan scoring + interpretation
-    const { system, user } = getMatchingInterpretationPrompt(boyChart, girlChart, boy, girl);
+    const { system, user } = getMatchingInterpretationPrompt(boyChart, girlChart, boy, girl, lang);
     const response = await callClaude(system, user, 5000);
     const matchingData = parseClaudeJSON(response);
 

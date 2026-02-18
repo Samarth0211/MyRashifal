@@ -4,7 +4,7 @@ import { getAskQuestionPrompt } from '@/lib/prompts';
 
 export async function POST(request) {
   try {
-    const { question, kundliData } = await request.json();
+    const { question, kundliData, lang = 'en' } = await request.json();
 
     if (!question || !kundliData) {
       return NextResponse.json(
@@ -13,7 +13,7 @@ export async function POST(request) {
       );
     }
 
-    const { system, user } = getAskQuestionPrompt(question, kundliData);
+    const { system, user } = getAskQuestionPrompt(question, kundliData, lang);
     const response = await callClaude(system, user, 3000);
     const answerData = parseClaudeJSON(response);
 

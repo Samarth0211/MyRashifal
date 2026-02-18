@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { LOADING_MESSAGES } from '@/lib/constants';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function LoadingScreen({ message }) {
+  const { t } = useLanguage();
   const [msgIndex, setMsgIndex] = useState(0);
 
   useEffect(() => {
@@ -13,7 +15,7 @@ export default function LoadingScreen({ message }) {
     return () => clearInterval(interval);
   }, []);
 
-  const displayMessage = message || LOADING_MESSAGES[msgIndex];
+  const displayMessage = message || t(`loading.${msgIndex}`);
 
   return (
     <div className="flex flex-col items-center justify-center py-20 animate-fade-in">

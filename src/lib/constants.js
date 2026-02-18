@@ -1,28 +1,28 @@
 export const RASHIS = [
-  { id: "aries", nameEn: "Aries", nameHi: "मेष (Mesh)", symbol: "♈", element: "Fire", ruler: "Mars", dateRange: "Mar 21 - Apr 19" },
-  { id: "taurus", nameEn: "Taurus", nameHi: "वृषभ (Vrishabh)", symbol: "♉", element: "Earth", ruler: "Venus", dateRange: "Apr 20 - May 20" },
-  { id: "gemini", nameEn: "Gemini", nameHi: "मिथुन (Mithun)", symbol: "♊", element: "Air", ruler: "Mercury", dateRange: "May 21 - Jun 20" },
-  { id: "cancer", nameEn: "Cancer", nameHi: "कर्क (Kark)", symbol: "♋", element: "Water", ruler: "Moon", dateRange: "Jun 21 - Jul 22" },
-  { id: "leo", nameEn: "Leo", nameHi: "सिंह (Singh)", symbol: "♌", element: "Fire", ruler: "Sun", dateRange: "Jul 23 - Aug 22" },
-  { id: "virgo", nameEn: "Virgo", nameHi: "कन्या (Kanya)", symbol: "♍", element: "Earth", ruler: "Mercury", dateRange: "Aug 23 - Sep 22" },
-  { id: "libra", nameEn: "Libra", nameHi: "तुला (Tula)", symbol: "♎", element: "Air", ruler: "Venus", dateRange: "Sep 23 - Oct 22" },
-  { id: "scorpio", nameEn: "Scorpio", nameHi: "वृश्चिक (Vrishchik)", symbol: "♏", element: "Water", ruler: "Mars", dateRange: "Oct 23 - Nov 21" },
-  { id: "sagittarius", nameEn: "Sagittarius", nameHi: "धनु (Dhanu)", symbol: "♐", element: "Fire", ruler: "Jupiter", dateRange: "Nov 22 - Dec 21" },
-  { id: "capricorn", nameEn: "Capricorn", nameHi: "मकर (Makar)", symbol: "♑", element: "Earth", ruler: "Saturn", dateRange: "Dec 22 - Jan 19" },
-  { id: "aquarius", nameEn: "Aquarius", nameHi: "कुम्भ (Kumbh)", symbol: "♒", element: "Air", ruler: "Saturn", dateRange: "Jan 20 - Feb 18" },
-  { id: "pisces", nameEn: "Pisces", nameHi: "मीन (Meen)", symbol: "♓", element: "Water", ruler: "Jupiter", dateRange: "Feb 19 - Mar 20" },
+  { id: "aries", nameEn: "Aries", nameHi: "मेष (Mesh)", nameMr: "मेष (Mesh)", symbol: "♈", element: "Fire", ruler: "Mars", dateRange: "Mar 21 - Apr 19" },
+  { id: "taurus", nameEn: "Taurus", nameHi: "वृषभ (Vrishabh)", nameMr: "वृषभ (Vrushabh)", symbol: "♉", element: "Earth", ruler: "Venus", dateRange: "Apr 20 - May 20" },
+  { id: "gemini", nameEn: "Gemini", nameHi: "मिथुन (Mithun)", nameMr: "मिथुन (Mithun)", symbol: "♊", element: "Air", ruler: "Mercury", dateRange: "May 21 - Jun 20" },
+  { id: "cancer", nameEn: "Cancer", nameHi: "कर्क (Kark)", nameMr: "कर्क (Kark)", symbol: "♋", element: "Water", ruler: "Moon", dateRange: "Jun 21 - Jul 22" },
+  { id: "leo", nameEn: "Leo", nameHi: "सिंह (Singh)", nameMr: "सिंह (Sinh)", symbol: "♌", element: "Fire", ruler: "Sun", dateRange: "Jul 23 - Aug 22" },
+  { id: "virgo", nameEn: "Virgo", nameHi: "कन्या (Kanya)", nameMr: "कन्या (Kanya)", symbol: "♍", element: "Earth", ruler: "Mercury", dateRange: "Aug 23 - Sep 22" },
+  { id: "libra", nameEn: "Libra", nameHi: "तुला (Tula)", nameMr: "तूळ (Tula)", symbol: "♎", element: "Air", ruler: "Venus", dateRange: "Sep 23 - Oct 22" },
+  { id: "scorpio", nameEn: "Scorpio", nameHi: "वृश्चिक (Vrishchik)", nameMr: "वृश्चिक (Vrushchik)", symbol: "♏", element: "Water", ruler: "Mars", dateRange: "Oct 23 - Nov 21" },
+  { id: "sagittarius", nameEn: "Sagittarius", nameHi: "धनु (Dhanu)", nameMr: "धनु (Dhanu)", symbol: "♐", element: "Fire", ruler: "Jupiter", dateRange: "Nov 22 - Dec 21" },
+  { id: "capricorn", nameEn: "Capricorn", nameHi: "मकर (Makar)", nameMr: "मकर (Makar)", symbol: "♑", element: "Earth", ruler: "Saturn", dateRange: "Dec 22 - Jan 19" },
+  { id: "aquarius", nameEn: "Aquarius", nameHi: "कुम्भ (Kumbh)", nameMr: "कुंभ (Kumbh)", symbol: "♒", element: "Air", ruler: "Saturn", dateRange: "Jan 20 - Feb 18" },
+  { id: "pisces", nameEn: "Pisces", nameHi: "मीन (Meen)", nameMr: "मीन (Meen)", symbol: "♓", element: "Water", ruler: "Jupiter", dateRange: "Feb 19 - Mar 20" },
 ];
 
 export const PLANETS = [
-  { id: "sun", nameEn: "Sun", nameHi: "सूर्य", abbr: "Su", symbol: "☉" },
-  { id: "moon", nameEn: "Moon", nameHi: "चंद्र", abbr: "Mo", symbol: "☽" },
-  { id: "mars", nameEn: "Mars", nameHi: "मंगल", abbr: "Ma", symbol: "♂" },
-  { id: "mercury", nameEn: "Mercury", nameHi: "बुध", abbr: "Me", symbol: "☿" },
-  { id: "jupiter", nameEn: "Jupiter", nameHi: "गुरु", abbr: "Ju", symbol: "♃" },
-  { id: "venus", nameEn: "Venus", nameHi: "शुक्र", abbr: "Ve", symbol: "♀" },
-  { id: "saturn", nameEn: "Saturn", nameHi: "शनि", abbr: "Sa", symbol: "♄" },
-  { id: "rahu", nameEn: "Rahu", nameHi: "राहु", abbr: "Ra", symbol: "☊" },
-  { id: "ketu", nameEn: "Ketu", nameHi: "केतु", abbr: "Ke", symbol: "☋" },
+  { id: "sun", nameEn: "Sun", nameHi: "सूर्य", nameMr: "सूर्य", abbr: "Su", symbol: "☉" },
+  { id: "moon", nameEn: "Moon", nameHi: "चंद्र", nameMr: "चंद्र", abbr: "Mo", symbol: "☽" },
+  { id: "mars", nameEn: "Mars", nameHi: "मंगल", nameMr: "मंगळ", abbr: "Ma", symbol: "♂" },
+  { id: "mercury", nameEn: "Mercury", nameHi: "बुध", nameMr: "बुध", abbr: "Me", symbol: "☿" },
+  { id: "jupiter", nameEn: "Jupiter", nameHi: "गुरु", nameMr: "गुरू", abbr: "Ju", symbol: "♃" },
+  { id: "venus", nameEn: "Venus", nameHi: "शुक्र", nameMr: "शुक्र", abbr: "Ve", symbol: "♀" },
+  { id: "saturn", nameEn: "Saturn", nameHi: "शनि", nameMr: "शनी", abbr: "Sa", symbol: "♄" },
+  { id: "rahu", nameEn: "Rahu", nameHi: "राहु", nameMr: "राहू", abbr: "Ra", symbol: "☊" },
+  { id: "ketu", nameEn: "Ketu", nameHi: "केतु", nameMr: "केतू", abbr: "Ke", symbol: "☋" },
 ];
 
 export const PRICING = {
@@ -60,3 +60,17 @@ export const SIGNS = [
   "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
   "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces",
 ];
+
+const LANG_KEY_MAP = { en: 'nameEn', hi: 'nameHi', mr: 'nameMr' };
+
+export function getRashiName(rashi, lang = 'en') {
+  const key = LANG_KEY_MAP[lang] || 'nameEn';
+  const found = RASHIS.find(r => r.id === rashi || r.nameEn === rashi);
+  return found ? (found[key] || found.nameEn) : rashi;
+}
+
+export function getPlanetName(planet, lang = 'en') {
+  const key = LANG_KEY_MAP[lang] || 'nameEn';
+  const found = PLANETS.find(p => p.id === planet || p.nameEn === planet);
+  return found ? (found[key] || found.nameEn) : planet;
+}

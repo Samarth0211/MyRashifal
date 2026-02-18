@@ -9,6 +9,7 @@ import PlanetTable from '@/components/PlanetTable';
 import LoadingScreen from '@/components/LoadingScreen';
 import { saveProfile, clearOldKundliCache } from '@/lib/storage';
 import { PRICING } from '@/lib/constants';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 // Normalize old cached data where JSON parsing failed and everything
 // was dumped into the `personality` field as raw text with labels
@@ -95,6 +96,7 @@ function normalizeKundliData(raw) {
 
 export default function KundliPage() {
   const { data: session, status } = useSession();
+  const { t, lang } = useLanguage();
   const [rawKundli, setRawKundli] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadingFromDb, setLoadingFromDb] = useState(true);
@@ -131,7 +133,7 @@ export default function KundliPage() {
       const res = await fetch('/api/generate-kundli', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, lang }),
       });
 
       if (!res.ok) throw new Error('Failed to generate kundli');
@@ -144,7 +146,7 @@ export default function KundliPage() {
       }
       setRawKundli(data);
     } catch (err) {
-      setError('The cosmic signals are temporarily disrupted. Please try again.');
+      setError(t('kundli.errorMsg'));
     } finally {
       setLoading(false);
     }
@@ -168,11 +170,11 @@ export default function KundliPage() {
     return (
       <div className="max-w-lg mx-auto px-4 py-12">
         <div className="text-center mb-8">
-          <h1 className="text-3xl sm:text-4xl font-heading font-bold mb-3">
-            Generate Your <span className="text-gold-gradient">Kundli</span>
+          <h1 className="text-3xl sm:text-4xl font-heading font-bold mb-3 text-gold-gradient">
+            {t('kundli.title')}
           </h1>
           <p className="text-text-secondary">
-            Enter your birth details to get your complete Vedic birth chart
+            {t('kundli.subtitle')}
           </p>
         </div>
 
@@ -183,7 +185,7 @@ export default function KundliPage() {
               onClick={() => setError('')}
               className="text-gold-primary text-sm mt-2 underline"
             >
-              Try again
+              {t('kundli.tryAgain')}
             </button>
           </div>
         )}
@@ -224,42 +226,42 @@ export default function KundliPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
         <div>
-          <h1 className="text-3xl font-heading font-bold">
-            <span className="text-gold-gradient">{kundli.birthDetails?.name || 'Your'}</span>&apos;s Kundli
+          <h1 className="text-3xl font-heading font-bold text-gold-gradient">
+            {t('kundli.kundliOf', { name: kundli.birthDetails?.name || 'Your' })}
           </h1>
           <p className="text-text-secondary text-sm mt-1">
             {kundli.birthDetails?.dob} | {kundli.birthDetails?.tob} | {kundli.birthDetails?.pob}
           </p>
         </div>
         <button onClick={handleReset} className="btn-outline-gold text-sm py-2 px-4">
-          New Kundli
+          {t('kundli.newKundli')}
         </button>
       </div>
 
       {/* Quick Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
         <div className="card-mystical text-center">
-          <p className="text-text-secondary text-xs mb-1">Lagna (Ascendant)</p>
+          <p className="text-text-secondary text-xs mb-1">{t('kundli.lagna')}</p>
           <p className="text-gold-light font-heading text-lg font-bold">{kundli.lagna?.sign}</p>
           <p className="text-text-secondary text-xs">{kundli.lagna?.degree}</p>
         </div>
         <div className="card-mystical text-center">
-          <p className="text-text-secondary text-xs mb-1">Moon Sign (Rashi)</p>
+          <p className="text-text-secondary text-xs mb-1">{t('kundli.moonSign')}</p>
           <p className="text-gold-light font-heading text-lg font-bold">{kundli.moonSign?.sign}</p>
           <p className="text-text-secondary text-xs">{kundli.moonSign?.degree}</p>
         </div>
         <div className="card-mystical text-center">
-          <p className="text-text-secondary text-xs mb-1">Nakshatra</p>
+          <p className="text-text-secondary text-xs mb-1">{t('kundli.nakshatra')}</p>
           <p className="text-gold-light font-heading text-lg font-bold">{kundli.moonSign?.nakshatra}</p>
-          <p className="text-text-secondary text-xs">Pada {kundli.moonSign?.pada}</p>
+          <p className="text-text-secondary text-xs">{t('kundli.pada')} {kundli.moonSign?.pada}</p>
         </div>
         <div className="card-mystical text-center">
-          <p className="text-text-secondary text-xs mb-1">Current Dasha</p>
+          <p className="text-text-secondary text-xs mb-1">{t('kundli.currentDasha')}</p>
           <p className="text-gold-light font-heading text-lg font-bold">
             {kundli.currentDasha?.mahadasha?.planet}
           </p>
           <p className="text-text-secondary text-xs">
-            {kundli.currentDasha?.antardasha?.planet} Antardasha
+            {kundli.currentDasha?.antardasha?.planet} {t('kundli.antardasha')}
           </p>
         </div>
       </div>
@@ -268,7 +270,7 @@ export default function KundliPage() {
       <div className="grid lg:grid-cols-2 gap-8 mb-12">
         <div>
           <h2 className="font-heading text-xl font-bold mb-4 text-gold-primary">
-            Birth Chart (Rashi)
+            {t('kundli.birthChart')}
           </h2>
           <div className="card-mystical">
             <KundliChart houses={kundli.houses} />
@@ -276,7 +278,7 @@ export default function KundliPage() {
         </div>
         <div>
           <h2 className="font-heading text-xl font-bold mb-4 text-gold-primary">
-            Planetary Positions
+            {t('kundli.planetaryPositions')}
           </h2>
           <div className="card-mystical">
             <PlanetTable planets={kundli.planets} />
@@ -290,10 +292,10 @@ export default function KundliPage() {
       {/* ── DETAILED ANALYSIS ── */}
       <div className="mt-10 mb-6">
         <h2 className="font-heading text-2xl sm:text-3xl font-bold text-center">
-          <span className="text-gold-gradient">Detailed Chart Analysis</span>
+          <span className="text-gold-gradient">{t('kundli.detailedAnalysis')}</span>
         </h2>
         <p className="text-text-secondary text-center text-sm mt-2">
-          Personalized interpretation based on your Vedic birth chart
+          {t('kundli.analysisSubtitle')}
         </p>
       </div>
 
@@ -324,7 +326,7 @@ export default function KundliPage() {
           <div className="report-section">
             <h3 className="flex items-center gap-2">
               <span className="text-gold-primary text-xl">☉</span>
-              Personality Profile
+              {t('kundli.detailedAnalysis')}
             </h3>
             <div className="space-y-3">
               {formatParagraphs(kundli.personality).map((para, i) => (
@@ -343,7 +345,7 @@ export default function KundliPage() {
           <div className="report-section" style={{ borderLeft: 'none', paddingLeft: 0 }}>
             <h3 className="flex items-center gap-2" style={{ paddingLeft: 0 }}>
               <span className="text-gold-primary text-xl">✦</span>
-              Yogas Found in Your Chart
+              {t('kundli.yogasTitle')}
             </h3>
           </div>
           <div className="grid sm:grid-cols-2 gap-4 mt-4">
@@ -370,12 +372,12 @@ export default function KundliPage() {
         <div className="report-section" style={{ borderLeft: 'none', paddingLeft: 0 }}>
           <h3 className="flex items-center gap-2" style={{ paddingLeft: 0 }}>
             <span className="text-gold-primary text-xl">⏳</span>
-            Current Dasha Period
+            {t('kundli.currentDashaPeriod')}
           </h3>
         </div>
         <div className="grid sm:grid-cols-2 gap-4 mt-4">
           <div className="bg-bg-card rounded-xl p-5 border border-[#2a2a5e]">
-            <p className="text-text-secondary text-xs uppercase tracking-widest mb-2">Mahadasha</p>
+            <p className="text-text-secondary text-xs uppercase tracking-widest mb-2">{t('kundli.mahadasha')}</p>
             <p className="text-gold-light font-heading font-bold text-2xl">
               {kundli.currentDasha?.mahadasha?.planet}
             </p>
@@ -384,7 +386,7 @@ export default function KundliPage() {
             </p>
           </div>
           <div className="bg-bg-card rounded-xl p-5 border border-[#2a2a5e]">
-            <p className="text-text-secondary text-xs uppercase tracking-widest mb-2">Antardasha</p>
+            <p className="text-text-secondary text-xs uppercase tracking-widest mb-2">{t('kundli.antardasha')}</p>
             <p className="text-gold-light font-heading font-bold text-2xl">
               {kundli.currentDasha?.antardasha?.planet}
             </p>
@@ -397,7 +399,7 @@ export default function KundliPage() {
           <div className="report-section mt-6">
             <h3 className="flex items-center gap-2">
               <span className="text-gold-primary text-xl">☍</span>
-              Dasha Interpretation
+              {t('kundli.dashaInterpretation')}
             </h3>
             <div className="space-y-3">
               {formatParagraphs(kundli.currentDasha.interpretation).map((para, i) => (
@@ -416,7 +418,7 @@ export default function KundliPage() {
           <div className="report-section" style={{ borderLeft: 'none', paddingLeft: 0 }}>
             <h3 className="flex items-center gap-2" style={{ paddingLeft: 0 }}>
               <span className="text-gold-primary text-xl">♂</span>
-              Manglik Dosha Analysis
+              {t('kundli.manglikAnalysis')}
             </h3>
           </div>
           <div className={`bg-bg-card rounded-xl p-5 border border-[#2a2a5e] border-l-4 mt-4 ${
@@ -432,11 +434,11 @@ export default function KundliPage() {
               </div>
               <div>
                 <p className="font-heading font-bold text-lg">
-                  {kundli.manglikStatus.isManglik ? 'Manglik Dosha Present' : 'No Manglik Dosha'}
+                  {kundli.manglikStatus.isManglik ? t('kundli.manglikPresent') : t('kundli.manglikAbsent')}
                 </p>
                 {kundli.manglikStatus.severity && kundli.manglikStatus.severity !== 'none' && (
                   <p className="text-text-secondary text-sm capitalize">
-                    Severity: {kundli.manglikStatus.severity}
+                    {t('kundli.severity')}: {kundli.manglikStatus.severity}
                   </p>
                 )}
               </div>
@@ -452,10 +454,10 @@ export default function KundliPage() {
       <div className="mt-14 mb-8">
         <div className="gold-divider" />
         <h2 className="font-heading text-2xl font-bold text-center mb-2 mt-8">
-          Unlock Your Complete <span className="text-gold-gradient">Life Blueprint</span>
+          {t('kundli.unlockTitle')}
         </h2>
         <p className="text-text-secondary text-center mb-8">
-          Go deeper with detailed premium reports based on your chart
+          {t('kundli.unlockSubtitle')}
         </p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {['career', 'marriage', 'health', 'varshphal', 'education'].map((type) => {
@@ -482,10 +484,7 @@ export default function KundliPage() {
 
       {/* Disclaimer */}
       <div className="text-text-secondary text-xs text-center mt-8 max-w-3xl mx-auto leading-relaxed">
-        This report is generated using classical Vedic astrology principles from Brihat Parashara
-        Hora Shastra and other authoritative Jyotish texts. Planetary positions are calculated for
-        the provided birth details using astronomical data. These insights are intended for spiritual
-        guidance and self-reflection purposes only.
+        {t('kundli.disclaimer')}
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import Script from 'next/script';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import AuthProvider from '@/components/AuthProvider';
+import { LanguageProvider } from '@/contexts/LanguageContext';
 import './globals.css';
 
 export const metadata = {
@@ -56,10 +57,12 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className="min-h-screen flex flex-col bg-bg-primary text-text-primary">
         <AuthProvider>
-          <StarsBackground />
-          <Navbar />
-          <main className="flex-1 pt-16 relative z-10">{children}</main>
-          <Footer />
+          <LanguageProvider>
+            <StarsBackground />
+            <Navbar />
+            <main className="flex-1 pt-16 relative z-10">{children}</main>
+            <Footer />
+          </LanguageProvider>
         </AuthProvider>
         <Script
           src="https://checkout.razorpay.com/v1/checkout.js"

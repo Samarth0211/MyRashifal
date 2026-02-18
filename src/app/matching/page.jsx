@@ -6,8 +6,10 @@ import PaymentButton from '@/components/PaymentButton';
 import LoadingScreen from '@/components/LoadingScreen';
 import { PRICING } from '@/lib/constants';
 import { savePurchase } from '@/lib/storage';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function MatchingPage() {
+  const { t, lang } = useLanguage();
   const [boyDetails, setBoyDetails] = useState(null);
   const [girlDetails, setGirlDetails] = useState(null);
   const [step, setStep] = useState('boy'); // boy | girl | pay | loading | results
@@ -33,14 +35,14 @@ export default function MatchingPage() {
       const res = await fetch('/api/kundli-matching', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ boy: boyDetails, girl: girlDetails }),
+        body: JSON.stringify({ boy: boyDetails, girl: girlDetails, lang }),
       });
       if (!res.ok) throw new Error('Failed to match');
       const data = await res.json();
       setResults(data);
       setStep('results');
     } catch {
-      setError('The cosmic signals are temporarily disrupted. Please try again.');
+      setError(t('common.error'));
       setStep('pay');
     }
   };
@@ -53,10 +55,10 @@ export default function MatchingPage() {
   };
 
   const getScoreLabel = (score) => {
-    if (score >= 33) return 'Excellent Match';
-    if (score >= 25) return 'Good Match';
-    if (score >= 18) return 'Average Match';
-    return 'Needs Remedies';
+    if (score >= 33) return t('matching.excellentMatch');
+    if (score >= 25) return t('matching.goodMatch');
+    if (score >= 18) return t('matching.averageMatch');
+    return t('matching.needsRemedies');
   };
 
   const getKutaIcon = (scored, max) => {
@@ -78,10 +80,10 @@ export default function MatchingPage() {
     <div className="max-w-4xl mx-auto px-4 py-12">
       <div className="text-center mb-10">
         <h1 className="text-3xl sm:text-4xl font-heading font-bold mb-3">
-          Kundli <span className="text-gold-gradient">Matching</span>
+          {t('matching.title')}
         </h1>
         <p className="text-text-secondary">
-          Ashtakoot Gun Milan — Complete compatibility analysis
+          {t('matching.subtitle')}
         </p>
         <p className="text-gold-light text-sm mt-1">₹{PRICING.matching.price}</p>
       </div>
@@ -89,7 +91,7 @@ export default function MatchingPage() {
       {/* Progress Indicator */}
       {step !== 'results' && (
         <div className="flex items-center justify-center gap-4 mb-10">
-          {['Boy Details', 'Girl Details', 'Match'].map((label, i) => {
+          {[t('matching.boyStep'), t('matching.girlStep'), t('matching.matchStep')].map((label, i) => {
             const stepIndex = i === 0 ? 'boy' : i === 1 ? 'girl' : 'pay';
             const isActive = step === stepIndex || (step === 'loading' && i === 2);
             const isComplete =
@@ -122,12 +124,12 @@ export default function MatchingPage() {
       {step === 'boy' && (
         <div className="max-w-lg mx-auto animate-fade-in">
           <h2 className="font-heading text-xl font-bold text-center mb-6 text-gold-primary">
-            Boy&apos;s Birth Details
+            {t('matching.boyDetails')}
           </h2>
           <div className="card-mystical">
             <BirthForm
               onSubmit={handleBoySubmit}
-              label="Next → Girl's Details"
+              label={t('matching.nextGirl')}
             />
           </div>
         </div>
@@ -137,15 +139,15 @@ export default function MatchingPage() {
       {step === 'girl' && (
         <div className="max-w-lg mx-auto animate-fade-in">
           <button onClick={() => setStep('boy')} className="text-gold-primary text-sm mb-4 hover:underline">
-            ← Back to boy&apos;s details
+            {t('matching.backToBoy')}
           </button>
           <h2 className="font-heading text-xl font-bold text-center mb-6 text-gold-primary">
-            Girl&apos;s Birth Details
+            {t('matching.girlDetails')}
           </h2>
           <div className="card-mystical">
             <BirthForm
               onSubmit={handleGirlSubmit}
-              label="Proceed to Match ✨"
+              label={t('matching.proceedMatch')}
             />
           </div>
         </div>
@@ -156,12 +158,12 @@ export default function MatchingPage() {
         <div className="max-w-lg mx-auto text-center animate-fade-in">
           <div className="card-mystical">
             <span className="text-5xl block mb-4">💍</span>
-            <h2 className="font-heading text-xl font-bold mb-2">Ready to Match</h2>
+            <h2 className="font-heading text-xl font-bold mb-2">{t('matching.readyTitle')}</h2>
             <p className="text-text-secondary text-sm mb-2">
               <strong>{boyDetails?.name}</strong> & <strong>{girlDetails?.name}</strong>
             </p>
             <p className="text-text-secondary text-sm mb-6">
-              Get complete Ashtakoot Gun Milan with 36-point analysis, Manglik check, and detailed compatibility report.
+              {t('matching.readyDesc')}
             </p>
             {error && (
               <p className="text-accent-red text-sm mb-4">{error}</p>
@@ -179,7 +181,7 @@ export default function MatchingPage() {
       {/* Loading */}
       {step === 'loading' && (
         <div className="min-h-[50vh] flex items-center justify-center">
-          <LoadingScreen message="Performing Ashtakoot Gun Milan..." />
+          <LoadingScreen message={t('matching.performing')} />
         </div>
       )}
 
@@ -208,12 +210,12 @@ export default function MatchingPage() {
           {/* Names */}
           <div className="grid grid-cols-2 gap-4 mb-8">
             <div className="card-mystical text-center">
-              <p className="text-text-secondary text-xs mb-1">Boy</p>
+              <p className="text-text-secondary text-xs mb-1">{t('matching.boy')}</p>
               <p className="font-bold text-gold-light">{results.boy?.name}</p>
               <p className="text-text-secondary text-xs">{results.boy?.moonSign} | {results.boy?.nakshatra}</p>
             </div>
             <div className="card-mystical text-center">
-              <p className="text-text-secondary text-xs mb-1">Girl</p>
+              <p className="text-text-secondary text-xs mb-1">{t('matching.girl')}</p>
               <p className="font-bold text-gold-light">{results.girl?.name}</p>
               <p className="text-text-secondary text-xs">{results.girl?.moonSign} | {results.girl?.nakshatra}</p>
             </div>
@@ -222,16 +224,16 @@ export default function MatchingPage() {
           {/* 8 Kuta Table */}
           <div className="card-mystical mb-8">
             <h2 className="font-heading text-xl font-bold text-gold-primary mb-4">
-              Ashtakoot Gun Milan
+              {t('matching.ashtakootTitle')}
             </h2>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border-custom">
-                    <th className="text-left py-2 px-2 text-gold-primary">Kuta</th>
-                    <th className="text-center py-2 px-2 text-gold-primary">Max</th>
-                    <th className="text-center py-2 px-2 text-gold-primary">Scored</th>
-                    <th className="text-center py-2 px-2 text-gold-primary">Result</th>
+                    <th className="text-left py-2 px-2 text-gold-primary">{t('matching.kuta')}</th>
+                    <th className="text-center py-2 px-2 text-gold-primary">{t('matching.max')}</th>
+                    <th className="text-center py-2 px-2 text-gold-primary">{t('matching.scored')}</th>
+                    <th className="text-center py-2 px-2 text-gold-primary">{t('matching.result')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -244,7 +246,7 @@ export default function MatchingPage() {
                     </tr>
                   ))}
                   <tr className="border-t-2 border-gold-primary/50">
-                    <td className="py-3 px-2 font-bold text-gold-primary">Total</td>
+                    <td className="py-3 px-2 font-bold text-gold-primary">{t('matching.total')}</td>
                     <td className="py-3 px-2 text-center font-bold text-text-secondary">36</td>
                     <td className="py-3 px-2 text-center font-bold text-gold-light text-lg">{results.totalScore}</td>
                     <td className="py-3 px-2 text-center">{getScoreLabel(results.totalScore)}</td>
@@ -258,16 +260,16 @@ export default function MatchingPage() {
           {results.manglikStatus && (
             <div className="grid sm:grid-cols-2 gap-4 mb-8">
               <div className={`card-mystical border-l-4 ${results.manglikStatus.boy?.isManglik ? 'border-l-accent-red' : 'border-l-accent-green'}`}>
-                <p className="text-text-secondary text-xs mb-1">Boy - Manglik Status</p>
+                <p className="text-text-secondary text-xs mb-1">{t('matching.boyManglik')}</p>
                 <p className="font-bold mb-1">
-                  {results.manglikStatus.boy?.isManglik ? '⚠️ Manglik' : '✅ Non-Manglik'}
+                  {results.manglikStatus.boy?.isManglik ? `⚠️ ${t('matching.manglik')}` : `✅ ${t('matching.nonManglik')}`}
                 </p>
                 <p className="text-text-secondary text-xs">{results.manglikStatus.boy?.details}</p>
               </div>
               <div className={`card-mystical border-l-4 ${results.manglikStatus.girl?.isManglik ? 'border-l-accent-red' : 'border-l-accent-green'}`}>
-                <p className="text-text-secondary text-xs mb-1">Girl - Manglik Status</p>
+                <p className="text-text-secondary text-xs mb-1">{t('matching.girlManglik')}</p>
                 <p className="font-bold mb-1">
-                  {results.manglikStatus.girl?.isManglik ? '⚠️ Manglik' : '✅ Non-Manglik'}
+                  {results.manglikStatus.girl?.isManglik ? `⚠️ ${t('matching.manglik')}` : `✅ ${t('matching.nonManglik')}`}
                 </p>
                 <p className="text-text-secondary text-xs">{results.manglikStatus.girl?.details}</p>
               </div>
@@ -277,12 +279,12 @@ export default function MatchingPage() {
           {/* Compatibility */}
           {results.compatibility && (
             <div className="space-y-4 mb-8">
-              <h2 className="font-heading text-xl font-bold text-gold-primary">Compatibility Analysis</h2>
+              <h2 className="font-heading text-xl font-bold text-gold-primary">{t('matching.compatTitle')}</h2>
               {[
-                { title: 'Mental Compatibility', content: results.compatibility.mental, icon: '🧠' },
-                { title: 'Physical Compatibility', content: results.compatibility.physical, icon: '❤️' },
-                { title: 'Financial Compatibility', content: results.compatibility.financial, icon: '💰' },
-                { title: 'Family Compatibility', content: results.compatibility.family, icon: '👨‍👩‍👧‍👦' },
+                { title: t('matching.mental'), content: results.compatibility.mental, icon: '🧠' },
+                { title: t('matching.physical'), content: results.compatibility.physical, icon: '❤️' },
+                { title: t('matching.financial'), content: results.compatibility.financial, icon: '💰' },
+                { title: t('matching.family'), content: results.compatibility.family, icon: '👨‍👩‍👧‍👦' },
               ].map((item) => (
                 <div key={item.title} className="report-section">
                   <h3 className="flex items-center gap-2">
@@ -297,7 +299,7 @@ export default function MatchingPage() {
           {/* Overall Verdict */}
           {results.overallVerdict && (
             <div className="highlight-box mb-8">
-              <h3 className="font-heading text-lg font-bold text-gold-primary mb-2">Overall Recommendation</h3>
+              <h3 className="font-heading text-lg font-bold text-gold-primary mb-2">{t('matching.recommendation')}</h3>
               <p className="text-text-primary text-sm leading-relaxed">{results.overallVerdict}</p>
             </div>
           )}
@@ -305,7 +307,7 @@ export default function MatchingPage() {
           {/* Remedies */}
           {results.remedies && (
             <div className="card-mystical mb-8">
-              <h3 className="font-heading text-lg font-bold text-gold-primary mb-2">Remedies</h3>
+              <h3 className="font-heading text-lg font-bold text-gold-primary mb-2">{t('matching.remedies')}</h3>
               <p className="text-text-primary text-sm leading-relaxed whitespace-pre-line">{results.remedies}</p>
             </div>
           )}
@@ -313,10 +315,10 @@ export default function MatchingPage() {
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10 no-print">
             <button onClick={() => window.print()} className="btn-outline-gold">
-              Download as PDF
+              {t('common.downloadPdf')}
             </button>
             <button onClick={handleReset} className="btn-outline-gold">
-              New Matching
+              {t('matching.newMatching')}
             </button>
           </div>
         </div>

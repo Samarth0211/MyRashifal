@@ -1,40 +1,22 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
-const TESTIMONIALS = [
-  {
-    name: 'Priya S.',
-    location: 'Bangalore',
-    text: 'The career report was spot-on. It predicted my job change within the exact dasha period mentioned. Highly recommended!',
-    rating: 5,
-  },
-  {
-    name: 'Rahul M.',
-    location: 'Jaipur',
-    text: "Gun Milan score matched exactly what our family pandit calculated. Saved us ₹2000! The detailed compatibility analysis was very helpful.",
-    rating: 5,
-  },
-  {
-    name: 'Anita K.',
-    location: 'Mumbai',
-    text: 'I check my personalized rashifal every morning. Much better than generic newspaper horoscopes. The predictions feel personal.',
-    rating: 4,
-  },
-  {
-    name: 'Deepak T.',
-    location: 'Delhi',
-    text: 'The Varshphal report gave me confidence about my business decision. Worth every rupee. Very detailed month-by-month analysis.',
-    rating: 5,
-  },
+const TESTIMONIAL_IDS = [
+  { id: 1, rating: 5 },
+  { id: 2, rating: 5 },
+  { id: 3, rating: 4 },
+  { id: 4, rating: 5 },
 ];
 
 export default function Testimonials() {
+  const { t } = useLanguage();
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % TESTIMONIALS.length);
+      setCurrent((prev) => (prev + 1) % TESTIMONIAL_IDS.length);
     }, 5000);
     return () => clearInterval(interval);
   }, []);
@@ -47,20 +29,20 @@ export default function Testimonials() {
           className="flex transition-transform duration-500 ease-in-out"
           style={{ transform: `translateX(-${current * 100}%)` }}
         >
-          {TESTIMONIALS.map((t, i) => (
+          {TESTIMONIAL_IDS.map((item, i) => (
             <div key={i} className="w-full flex-shrink-0 px-4">
               <div className="card-mystical text-center">
                 {/* Stars */}
                 <div className="text-gold-primary mb-3">
-                  {'★'.repeat(t.rating)}{'☆'.repeat(5 - t.rating)}
+                  {'★'.repeat(item.rating)}{'☆'.repeat(5 - item.rating)}
                 </div>
                 {/* Quote */}
                 <p className="text-text-primary italic mb-4 leading-relaxed">
-                  &ldquo;{t.text}&rdquo;
+                  &ldquo;{t(`testimonial.${item.id}.text`)}&rdquo;
                 </p>
                 {/* Author */}
-                <p className="text-gold-light font-medium">{t.name}</p>
-                <p className="text-text-secondary text-sm">{t.location}</p>
+                <p className="text-gold-light font-medium">{t(`testimonial.${item.id}.name`)}</p>
+                <p className="text-text-secondary text-sm">{t(`testimonial.${item.id}.location`)}</p>
               </div>
             </div>
           ))}
@@ -69,7 +51,7 @@ export default function Testimonials() {
 
       {/* Dots */}
       <div className="flex justify-center gap-2 mt-6">
-        {TESTIMONIALS.map((_, i) => (
+        {TESTIMONIAL_IDS.map((_, i) => (
           <button
             key={i}
             onClick={() => setCurrent(i)}

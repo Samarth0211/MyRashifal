@@ -8,7 +8,7 @@ import { saveKundliToDB } from '@/lib/db';
 
 export async function POST(request) {
   try {
-    const birthDetails = await request.json();
+    const { lang = 'en', ...birthDetails } = await request.json();
 
     // Validate required fields
     if (!birthDetails.name || !birthDetails.dob || !birthDetails.tob || !birthDetails.pob) {
@@ -31,7 +31,7 @@ export async function POST(request) {
     );
 
     // Step 3: Call Claude ONLY for interpretation (not calculation)
-    const { system, user } = getKundliInterpretationPrompt(birthDetails, calculatedData);
+    const { system, user } = getKundliInterpretationPrompt(birthDetails, calculatedData, lang);
     const response = await callClaude(system, user, 4000);
     const interpretation = parseClaudeJSON(response);
 

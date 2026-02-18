@@ -4,7 +4,7 @@ import { getMuhuratPrompt } from '@/lib/prompts';
 
 export async function POST(request) {
   try {
-    const { eventType, startDate, endDate, birthDetails } = await request.json();
+    const { eventType, startDate, endDate, birthDetails, lang = 'en' } = await request.json();
 
     if (!eventType || !startDate || !endDate) {
       return NextResponse.json(
@@ -13,7 +13,7 @@ export async function POST(request) {
       );
     }
 
-    const { system, user } = getMuhuratPrompt(eventType, startDate, endDate, birthDetails);
+    const { system, user } = getMuhuratPrompt(eventType, startDate, endDate, birthDetails, lang);
     const response = await callClaude(system, user, 4000);
     const muhuratData = parseClaudeJSON(response);
 

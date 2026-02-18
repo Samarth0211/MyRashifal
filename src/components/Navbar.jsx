@@ -4,19 +4,22 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import UserMenu from './UserMenu';
-
-const NAV_LINKS = [
-  { href: '/', label: 'Home' },
-  { href: '/kundli', label: 'My Kundli' },
-  { href: '/reports', label: 'Reports' },
-  { href: '/matching', label: 'Matching' },
-  { href: '/muhurat', label: 'Muhurat' },
-  { href: '/rashifal', label: 'Daily Rashifal' },
-];
+import LanguageToggle from './LanguageToggle';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
+  const { t } = useLanguage();
+
+  const NAV_LINKS = [
+    { href: '/', label: t('nav.home') },
+    { href: '/kundli', label: t('nav.myKundli') },
+    { href: '/reports', label: t('nav.reports') },
+    { href: '/matching', label: t('nav.matching') },
+    { href: '/muhurat', label: t('nav.muhurat') },
+    { href: '/rashifal', label: t('nav.dailyRashifal') },
+  ];
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/90 backdrop-blur-md border-b border-border-custom">
@@ -50,13 +53,14 @@ export default function Navbar() {
             })}
           </div>
 
-          {/* Auth + CTA (Desktop) */}
+          {/* Auth + CTA + Language (Desktop) */}
           <div className="hidden md:flex items-center gap-3">
+            <LanguageToggle />
             <Link
               href="/kundli"
               className="btn-gold text-sm no-underline inline-block"
             >
-              Free Kundli
+              {t('nav.freeKundli')}
             </Link>
             <UserMenu />
           </div>
@@ -106,9 +110,10 @@ export default function Navbar() {
               onClick={() => setMobileOpen(false)}
               className="btn-gold text-center mt-4 no-underline"
             >
-              Free Kundli
+              {t('nav.freeKundli')}
             </Link>
-            <div className="mt-4 flex justify-center">
+            <div className="mt-4 flex items-center justify-center gap-4">
+              <LanguageToggle />
               <UserMenu />
             </div>
           </div>

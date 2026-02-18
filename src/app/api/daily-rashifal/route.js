@@ -16,6 +16,7 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const rashi = searchParams.get('rashi');
     const date = searchParams.get('date') || new Date().toISOString().split('T')[0];
+    const lang = searchParams.get('lang') || 'en';
 
     if (!rashi) {
       return NextResponse.json(
@@ -24,13 +25,13 @@ export async function GET(request) {
       );
     }
 
-    // Check cache
-    const cacheKey = getCacheKey(rashi, date);
+    // Check cache (includes lang so each language gets its own cache entry)
+    const cacheKey = getCacheKey(rashi, date) + `_${lang}`;
     if (cache.has(cacheKey)) {
       return NextResponse.json(cache.get(cacheKey), { status: 200 });
     }
 
-    const { system, user } = getDailyRashifalPrompt(rashi, date);
+    const { system, user } = getDailyRashifalPrompt(rashi, date, lang);
     const response = await callClaude(system, user, 2000);
     const rashifalData = parseClaudeJSON(response);
 
