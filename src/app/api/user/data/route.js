@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
-import { getKundliFromDB, getPurchasesFromDB, getAllReportsFromDB } from '@/lib/db';
+import { getKundliFromDB, getPurchasesFromDB, getAllReportsFromDB, countUserQuestions } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,10 +16,11 @@ export async function GET() {
 
     const userId = session.user.id;
 
-    const [kundli, purchases, reports] = await Promise.all([
+    const [kundli, purchases, reports, questionCount] = await Promise.all([
       getKundliFromDB(userId),
       getPurchasesFromDB(userId),
       getAllReportsFromDB(userId),
+      countUserQuestions(userId),
     ]);
 
     // Convert purchases array to a map { reportType: true } for easy lookup
@@ -38,6 +39,7 @@ export async function GET() {
       kundli,
       purchases: purchasedTypes,
       reports: reportsMap,
+      questionCount,
     });
   } catch (error) {
     console.error('Error fetching user data:', error);

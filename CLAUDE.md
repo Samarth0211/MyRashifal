@@ -130,10 +130,11 @@ sessions       — { sessionToken, userId, expires }             (managed by Nex
 kundlis        — { userId, birthDetails, planets, houses, ... } (upserted per user)
 purchases      — { userId, reportType, paymentId, amount, ... } (one per purchase)
 reports        — { userId, reportType, reportData, ... }        (upserted per user+type)
+questions      — { userId, question, answer, isFree, paymentId, createdAt } (ask astrologer)
 ```
-- `src/lib/db.js` provides CRUD functions: `saveKundliToDB`, `getKundliFromDB`, `savePurchaseToDB`, `getPurchasesFromDB`, `hasPurchase`, `saveReportToDB`, `getReportFromDB`, `getAllReportsFromDB`
+- `src/lib/db.js` provides CRUD functions: `saveKundliToDB`, `getKundliFromDB`, `savePurchaseToDB`, `getPurchasesFromDB`, `hasPurchase`, `saveReportToDB`, `getReportFromDB`, `getAllReportsFromDB`, `saveQuestionToDB`, `countUserQuestions`, `getUserQuestionHistory`
 - `src/lib/mongodb.js` provides `clientPromise` singleton with HMR-safe global caching
-- `GET /api/user/data` returns user's kundli, purchases, and reports from DB (requires auth)
+- `GET /api/user/data` returns user's kundli, purchases, reports, and questionCount from DB (requires auth)
 
 ### Data Persistence Strategy
 - **Logged-in users:** All data (kundli, purchases, reports) stored in MongoDB only. No localStorage for kundli.
@@ -153,7 +154,9 @@ reports        — { userId, reportType, reportData, ... }        (upserted per 
 7. On success → report is generated and displayed
 
 ### Claude API Usage
-- Model: `claude-sonnet-4-20250514`
+- Default model: `claude-sonnet-4-20250514` (for reports, kundli, matching, muhurat)
+- Ask Astrologer uses `claude-haiku-4-5-20251001` (cheaper per question)
+- `callClaude(systemPrompt, userPrompt, maxTokens, model)` — 4th param overrides model
 - All calls go through `src/lib/claude.js` `callClaude()` function
 - JSON responses are parsed with `parseClaudeJSON()` which handles markdown wrapping and truncated JSON
 - System prompt tells Claude to INTERPRET pre-calculated data, never recalculate
@@ -211,7 +214,18 @@ The `parseClaudeJSON()` function handles:
 | Complete Bundle | ₹299 |
 | Kundli Matching | ₹79 |
 | Shubh Muhurat | ₹29 |
-| Ask a Question | ₹29 |
+| Ask a Question | First 5 free, then ₹29 |
+
+### Ask Astrologer Feature
+- **Free tier:** First 5 questions free for logged-in users (tracked in `questions` collection)
+- **Paid tier:** ₹29 per question after free limit (Razorpay payment required)
+- **Model:** Claude Haiku 4.5 (`claude-haiku-4-5-20251001`) — cheaper than Sonnet for Q&A
+- **Auth required:** Users must sign in to ask questions (server-side enforcement)
+- **Kundli required:** Loads from DB via `/api/user/data` (not localStorage)
+- **Flow:** Sign in → Form → (free: direct submit / paid: PaymentButton) → Loading → Answer
+- **Server-side validation:** `POST /api/ask-question` checks auth, counts questions, enforces free limit
+- **Question history:** Saved to MongoDB `questions` collection with `isFree` flag
+- **UI:** Green badge showing "{count} free questions remaining", transitions to price display at 0
 
 ## UI Design Notes
 - Kundli results page inspired by AstroSage/AstroTalk — clean sectioned layout, not a wall of text

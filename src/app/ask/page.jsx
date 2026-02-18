@@ -1,21 +1,27 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSession, signIn } from 'next-auth/react';
 import Link from 'next/link';
 import PaymentButton from '@/components/PaymentButton';
 import LoadingScreen from '@/components/LoadingScreen';
-import { getKundli, savePurchase } from '@/lib/storage';
 import { PRICING } from '@/lib/constants';
+import { savePurchase } from '@/lib/storage';
 import { useLanguage } from '@/contexts/LanguageContext';
+
+const FREE_LIMIT = 5;
 
 export default function AskPage() {
   const { t, lang } = useLanguage();
+  const { data: session, status: authStatus } = useSession();
   const [kundli, setKundli] = useState(null);
   const [question, setQuestion] = useState('');
   const [step, setStep] = useState('form'); // form | pay | loading | answer
   const [answer, setAnswer] = useState(null);
   const [error, setError] = useState('');
   const [history, setHistory] = useState([]);
+  const [freeRemaining, setFreeRemaining] = useState(FREE_LIMIT);
+  const [dataLoading, setDataLoading] = useState(true);
 
   const EXAMPLE_QUESTIONS = [
     t('ask.example1'),
@@ -26,9 +32,56 @@ export default function AskPage() {
     t('ask.example6'),
   ];
 
+  // Load kundli and question count from DB
   useEffect(() => {
-    setKundli(getKundli());
-  }, []);
+    if (authStatus === 'loading') return;
+    if (!session?.user) {
+      setDataLoading(false);
+      return;
+    }
+
+    async function loadData() {
+      try {
+        const res = await fetch('/api/user/data');
+        if (res.ok) {
+          const data = await res.json();
+          setKundli(data.kundli);
+          const count = data.questionCount || 0;
+          setFreeRemaining(Math.max(0, FREE_LIMIT - count));
+        }
+      } catch {
+        // ignore fetch errors
+      } finally {
+        setDataLoading(false);
+      }
+    }
+    loadData();
+  }, [session, authStatus]);
+
+  const handleFreeSubmit = async () => {
+    setStep('loading');
+    setError('');
+
+    try {
+      const res = await fetch('/api/ask-question', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question, lang }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Failed');
+      }
+      const data = await res.json();
+      setAnswer(data);
+      setHistory((prev) => [{ question, answer: data }, ...prev]);
+      setFreeRemaining(data.freeRemaining ?? Math.max(0, freeRemaining - 1));
+      setStep('answer');
+    } catch (err) {
+      setError(err.message || t('common.error'));
+      setStep('form');
+    }
+  };
 
   const handlePaymentSuccess = async (paymentId) => {
     savePurchase(`question_${Date.now()}`, paymentId);
@@ -39,12 +92,12 @@ export default function AskPage() {
       const res = await fetch('/api/ask-question', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question, kundliData: kundli, lang }),
+        body: JSON.stringify({ question, paymentId, lang }),
       });
       if (!res.ok) throw new Error('Failed');
       const data = await res.json();
       setAnswer(data);
-      setHistory((prev) => [...prev, { question, answer: data }]);
+      setHistory((prev) => [{ question, answer: data }, ...prev]);
       setStep('answer');
     } catch {
       setError(t('common.error'));
@@ -58,6 +111,34 @@ export default function AskPage() {
     setStep('form');
     setError('');
   };
+
+  // Loading state
+  if (authStatus === 'loading' || dataLoading) {
+    return (
+      <div className="max-w-lg mx-auto px-4 py-20 text-center">
+        <div className="zodiac-spinner mx-auto mb-6" />
+        <p className="text-text-secondary">{t('reports.loadingData')}</p>
+      </div>
+    );
+  }
+
+  // Not signed in
+  if (!session?.user) {
+    return (
+      <div className="max-w-lg mx-auto px-4 py-20 text-center">
+        <span className="text-6xl block mb-6">❓</span>
+        <h1 className="text-3xl font-heading font-bold mb-4">
+          {t('ask.signInRequired')}
+        </h1>
+        <p className="text-text-secondary mb-8">
+          {t('ask.signInDesc')}
+        </p>
+        <button onClick={() => signIn('google')} className="btn-gold">
+          {t('auth.continueWithGoogle')}
+        </button>
+      </div>
+    );
+  }
 
   // No kundli
   if (!kundli) {
@@ -87,7 +168,19 @@ export default function AskPage() {
         <p className="text-text-secondary">
           {t('ask.subtitle')}
         </p>
-        <p className="text-gold-light text-sm mt-1">₹{PRICING.question.price} {t('ask.perQuestion')}</p>
+
+        {/* Free tier badge */}
+        {freeRemaining > 0 ? (
+          <div className="mt-3 inline-flex items-center gap-2 bg-accent-green/10 border border-accent-green/30 rounded-full px-4 py-1.5">
+            <span className="text-accent-green text-sm font-semibold">
+              {t('ask.freeRemaining', { count: freeRemaining })}
+            </span>
+          </div>
+        ) : (
+          <p className="text-gold-light text-sm mt-2">
+            ₹{PRICING.question.price} {t('ask.perQuestion')}
+          </p>
+        )}
       </div>
 
       {/* Form */}
@@ -125,13 +218,26 @@ export default function AskPage() {
               </div>
             </div>
 
-            <button
-              onClick={() => setStep('pay')}
-              disabled={!question.trim()}
-              className="btn-gold w-full mt-6"
-            >
-              {t('ask.getAnswer')}
-            </button>
+            {error && <p className="text-accent-red text-sm mt-4">{error}</p>}
+
+            {/* Free path: direct submit */}
+            {freeRemaining > 0 ? (
+              <button
+                onClick={handleFreeSubmit}
+                disabled={!question.trim()}
+                className="btn-gold w-full mt-6"
+              >
+                {t('ask.getAnswer')}
+              </button>
+            ) : (
+              <button
+                onClick={() => setStep('pay')}
+                disabled={!question.trim()}
+                className="btn-gold w-full mt-6"
+              >
+                {t('ask.getAnswer')} — ₹{PRICING.question.price}
+              </button>
+            )}
           </div>
 
           {/* Previous Questions */}

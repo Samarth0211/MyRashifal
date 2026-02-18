@@ -1,4 +1,4 @@
-export async function callClaude(systemPrompt, userPrompt, maxTokens = 4000) {
+export async function callClaude(systemPrompt, userPrompt, maxTokens = 4000, model = 'claude-sonnet-4-20250514') {
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -7,7 +7,7 @@ export async function callClaude(systemPrompt, userPrompt, maxTokens = 4000) {
       'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
+      model,
       max_tokens: maxTokens,
       system: systemPrompt,
       messages: [{ role: 'user', content: userPrompt }],

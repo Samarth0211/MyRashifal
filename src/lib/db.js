@@ -92,3 +92,32 @@ export async function getAllReportsFromDB(userId) {
     .project({ _id: 0, userId: 0 })
     .toArray();
 }
+
+// ── Questions (Ask Astrologer) ──
+
+export async function saveQuestionToDB(userId, { question, answer, isFree, paymentId }) {
+  const db = await getDb();
+  return db.collection('questions').insertOne({
+    userId,
+    question,
+    answer,
+    isFree,
+    paymentId: paymentId || null,
+    createdAt: new Date(),
+  });
+}
+
+export async function countUserQuestions(userId) {
+  const db = await getDb();
+  return db.collection('questions').countDocuments({ userId });
+}
+
+export async function getUserQuestionHistory(userId, limit = 10) {
+  const db = await getDb();
+  return db.collection('questions')
+    .find({ userId })
+    .sort({ createdAt: -1 })
+    .limit(limit)
+    .project({ _id: 0, userId: 0 })
+    .toArray();
+}

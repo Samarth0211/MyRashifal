@@ -312,6 +312,11 @@ const en = {
   "ask.example4": "Will I travel abroad soon?",
   "ask.example5": "How will my finances be this year?",
   "ask.example6": "Is this relationship right for me?",
+  "ask.freeRemaining": "{count} free questions remaining",
+  "ask.freeQuestions": "First 5 questions are free!",
+  "ask.paidAfter": "₹{price} per question after free tier",
+  "ask.signInRequired": "Sign In to Ask Questions",
+  "ask.signInDesc": "Sign in to get 5 free chart-based answers to your life questions. After that, each question is just ₹29.",
 
   // --- Payment ---
   "payment.processing": "Processing...",
