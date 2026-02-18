@@ -23,7 +23,7 @@ export default function HomePage() {
           </div>
 
           {/* Title */}
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-heading font-bold mb-6 leading-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-heading font-bold mb-6 leading-tight">
             <span className="text-gold-gradient">MyRashifal+</span>
           </h1>
 

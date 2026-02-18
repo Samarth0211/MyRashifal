@@ -4,9 +4,14 @@ import { useState } from 'react';
 import { useSession, signIn } from 'next-auth/react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
+const isTestMode =
+  typeof process !== 'undefined' &&
+  process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID?.startsWith('rzp_test_');
+
 export default function PaymentButton({ amount, reportType, reportName, onPaymentSuccess, disabled, className }) {
   const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
+  const [showTestInfo, setShowTestInfo] = useState(false);
   const { data: session, status } = useSession();
 
   const handlePayment = async () => {
@@ -90,12 +95,34 @@ export default function PaymentButton({ amount, reportType, reportName, onPaymen
   };
 
   return (
-    <button
-      onClick={handlePayment}
-      disabled={loading || disabled}
-      className={className || 'btn-gold w-full'}
-    >
-      {loading ? t('payment.processing') : !session ? t('payment.signInToUnlock', { amount }) : t('payment.unlockFor', { amount })}
-    </button>
+    <div>
+      <button
+        onClick={handlePayment}
+        disabled={loading || disabled}
+        className={className || 'btn-gold w-full'}
+      >
+        {loading ? t('payment.processing') : !session ? t('payment.signInToUnlock', { amount }) : t('payment.unlockFor', { amount })}
+      </button>
+
+      {isTestMode && (
+        <div className="mt-2">
+          <button
+            type="button"
+            onClick={() => setShowTestInfo(!showTestInfo)}
+            className="flex items-center gap-1 text-[11px] text-blue-400/80 hover:text-blue-400 transition-colors"
+          >
+            <span>ℹ️</span>
+            <span>{showTestInfo ? 'Hide test details' : 'Test mode — click for card details'}</span>
+          </button>
+          {showTestInfo && (
+            <div className="mt-1.5 rounded border border-blue-500/20 bg-blue-500/5 px-3 py-2 text-[11px] text-text-secondary space-y-0.5 animate-fade-in">
+              <div>Card: <code className="text-blue-300">4111 1111 1111 1111</code></div>
+              <div>Expiry: <span className="text-blue-300">Any future date</span> &middot; CVV: <span className="text-blue-300">Any 3 digits</span></div>
+              <div>UPI: <code className="text-blue-300">success@razorpay</code></div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
   );
 }

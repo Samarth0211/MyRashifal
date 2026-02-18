@@ -13,6 +13,8 @@ MyRashifal+ is a premium personalized Vedic astrology web app. Users input birth
 - **Auth:** NextAuth.js v5 (Auth.js) with Google OAuth + JWT sessions
 - **Database:** MongoDB Atlas (serverless free tier) via `mongodb` driver + `@auth/mongodb-adapter`
 - **Storage:** MongoDB (logged-in users) + ephemeral React state (anonymous users)
+- **i18n:** Custom React Context + translation dictionaries (EN/HI/MR) — no heavy library
+- **Deployment:** Vercel (via `npx vercel --prod` CLI — Git webhook may be unreliable)
 
 ## Critical Architecture Rule
 **Never use Claude (or any LLM) to calculate astronomical positions.** LLMs hallucinate numbers. All planetary positions, house placements, nakshatras, dashas, and ascendant are computed mathematically using `astronomy-engine` with Lahiri ayanamsa. Claude is used ONLY for **interpretation** of pre-calculated data.
@@ -52,13 +54,22 @@ myrashifal/
 │   │       ├── create-order/     # Razorpay order creation
 │   │       ├── verify-payment/   # Razorpay HMAC signature verification + DB purchase save
 │   │       └── user/data/        # GET: fetch user's kundli, purchases, reports from DB
+│   ├── translations/
+│   │   ├── index.js              # Registry: { en, hi, mr } + SUPPORTED_LANGS list
+│   │   ├── en.js                 # English strings (~380 keys, dot-notation)
+│   │   ├── hi.js                 # Hindi translations (Devanagari)
+│   │   └── mr.js                 # Marathi translations (Devanagari)
+│   ├── contexts/
+│   │   └── LanguageContext.jsx   # LanguageProvider + useLanguage() hook + t() function
 │   ├── components/
-│   │   ├── Navbar.jsx            # Fixed top nav, mobile hamburger, UserMenu
-│   │   ├── Footer.jsx            # Links, disclaimer
+│   │   ├── Navbar.jsx            # Fixed top nav, mobile hamburger, UserMenu, LanguageToggle
+│   │   ├── Footer.jsx            # Links, disclaimer (uses t() for all strings)
+│   │   ├── LanguageToggle.jsx    # Compact EN|हिं|मर toggle (in Navbar + mobile menu)
+│   │   ├── TestModeBadge.jsx     # Floating test mode badge (only when rzp_test_ key)
 │   │   ├── BirthForm.jsx         # Birth form with user-scoped profile save/load (auth-gated)
 │   │   ├── KundliChart.jsx       # North Indian style SVG birth chart
 │   │   ├── PlanetTable.jsx       # Planet positions table with dignity colors
-│   │   ├── PaymentButton.jsx     # Full Razorpay checkout flow + auth gate
+│   │   ├── PaymentButton.jsx     # Full Razorpay checkout flow + auth gate + test mode hint
 │   │   ├── ReportCard.jsx        # Report card with payment integration
 │   │   ├── RashiCard.jsx         # Zodiac sign card
 │   │   ├── PricingCards.jsx      # Free vs Premium comparison
@@ -208,6 +219,54 @@ The `parseClaudeJSON()` function handles:
 - Yogas rendered as individual cards with gold left accent borders
 - Dasha period uses side-by-side Mahadasha/Antardasha cards with separate interpretation section
 - Manglik status uses color-coded indicator (red = present, green = absent)
+
+## Multi-Language Support (EN / HI / MR)
+
+### Translation System
+- Simple React Context + flat key-value dictionaries (no next-intl or i18next)
+- `t('nav.home')` → "Home" / "होम" / "मुख्यपृष्ठ"
+- `t('reports.subtitle', { name: 'Priya' })` → interpolation with `{param}` placeholders
+- Falls back to English if key missing; console warning in dev
+- Language persisted to `localStorage` under `myrashifal_lang`, defaults to `en`
+
+### Translation Keys
+- ~380 keys in dot-notation: `nav.home`, `kundli.title`, `form.fullName`, `pricing.career`
+- Files: `src/translations/en.js`, `hi.js`, `mr.js`, `index.js`
+- Astrological terms (Rashi, Nakshatra, Dasha, Yoga) stay in Sanskrit/Hindi across all languages
+
+### AI Content Language
+- Each API route accepts `lang` from the client request body/query
+- `src/lib/prompts.js` has `LANG_INSTRUCTIONS` and `getLangInstruction(lang)` helper
+- All prompt functions accept `lang = 'en'` param, prepend "Respond entirely in Hindi/Marathi (Devanagari)" instruction
+- Constants: `RASHIS` and `PLANETS` have `nameMr` field; `getRashiName(rashi, lang)` and `getPlanetName(planet, lang)` helpers
+
+### Language Toggle UI
+- Compact button group in Navbar: `[EN] [हिं] [मर]`
+- Active language highlighted with gold accent
+- In both desktop nav and mobile hamburger menu
+
+## Razorpay Test Mode
+- When `NEXT_PUBLIC_RAZORPAY_KEY_ID` starts with `rzp_test_`:
+  - **TestModeBadge**: Floating blue "Test Mode" badge in bottom-left corner with expandable test card details
+  - **PaymentButton**: Inline "Test mode" hint below each payment button with card details
+- Test card: `4111 1111 1111 1111`, any future expiry, any 3-digit CVV
+- Test UPI: `success@razorpay`
+- Both auto-hide when live Razorpay keys are used
+
+## Mobile Responsiveness
+- `@media (hover: none)` disables card/button hover transforms on touch devices (prevents tap-jump)
+- `@media (max-width: 640px)` tighter card padding (1rem), report-section padding (1rem), highlight-box padding
+- Devanagari text: `word-break: break-word; overflow-wrap: break-word` on `.font-hindi`, `[lang="hi"]`, `[lang="mr"]`
+- Touch targets: LanguageToggle min 44px, Navbar mobile links min 48px height, Testimonials dots larger
+- PlanetTable: hides Nakshatra/Dignity columns on mobile (`hidden sm:table-cell`), has `overflow-x-auto`
+- Responsive grids: Rashifal lucky section `grid-cols-1 sm:grid-cols-3`, hero title `text-4xl sm:text-5xl md:text-7xl`
+- Footer links `gap-3 sm:gap-6` for mobile spacing
+
+## Deployment
+- Hosted on Vercel at `myrashifal.in`
+- Deploy via `npx vercel --prod` (Git webhook unreliable due to "Require Verified Commits" setting)
+- Git author email must match Vercel team member email (`bhamaresamarth@gmail.com`)
+- Environment variables set in Vercel dashboard (same as `.env.local`)
 
 ## Disclaimer
 Every report page includes the legal disclaimer that this is for spiritual guidance and entertainment purposes only, not a substitute for professional advice.

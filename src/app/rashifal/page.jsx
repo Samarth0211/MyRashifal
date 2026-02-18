@@ -79,7 +79,7 @@ export default function RashifalPage() {
         <div className="text-center py-12">
           <p className="text-accent-red mb-4">{error}</p>
           <button onClick={() => handleSelect(selected)} className="btn-gold">
-            Try Again
+            {t('kundli.tryAgain')}
           </button>
         </div>
       )}
@@ -131,7 +131,7 @@ export default function RashifalPage() {
           </div>
 
           {/* Lucky Section */}
-          <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
             <div className="card-mystical text-center">
               <p className="text-text-secondary text-xs mb-1">{t('rashifal.luckyNumber')}</p>
               <p className="text-gold-light text-2xl font-bold">{rashifal.luckyNumber}</p>

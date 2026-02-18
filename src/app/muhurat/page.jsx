@@ -56,7 +56,7 @@ export default function MuhuratPage() {
       setResults(data);
       setStep('results');
     } catch {
-      setError('The cosmic signals are temporarily disrupted. Please try again.');
+      setError(t('common.error'));
       setStep('pay');
     }
   };

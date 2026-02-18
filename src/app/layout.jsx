@@ -2,6 +2,7 @@ import Script from 'next/script';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import AuthProvider from '@/components/AuthProvider';
+import TestModeBadge from '@/components/TestModeBadge';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import './globals.css';
 
@@ -62,6 +63,7 @@ export default function RootLayout({ children }) {
             <Navbar />
             <main className="flex-1 pt-16 relative z-10">{children}</main>
             <Footer />
+            <TestModeBadge />
           </LanguageProvider>
         </AuthProvider>
         <Script

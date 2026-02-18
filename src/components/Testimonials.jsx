@@ -55,9 +55,10 @@ export default function Testimonials() {
           <button
             key={i}
             onClick={() => setCurrent(i)}
-            className={`w-2.5 h-2.5 rounded-full transition-all ${
-              i === current ? 'bg-gold-primary w-6' : 'bg-border-custom'
+            className={`h-3 rounded-full transition-all ${
+              i === current ? 'bg-gold-primary w-8' : 'bg-border-custom w-3'
             }`}
+            style={{ touchAction: 'manipulation' }}
             aria-label={`Go to testimonial ${i + 1}`}
           />
         ))}

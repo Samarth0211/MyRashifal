@@ -95,7 +95,7 @@ export default function Navbar() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className={`px-4 py-3 rounded-lg text-lg font-medium no-underline transition-all ${
+                  className={`px-4 py-4 rounded-lg text-lg font-medium no-underline transition-all min-h-[48px] flex items-center ${
                     isActive
                       ? 'text-gold-primary bg-gold-primary/10'
                       : 'text-text-primary hover:bg-white/5'

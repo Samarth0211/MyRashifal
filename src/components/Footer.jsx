@@ -19,7 +19,7 @@ export default function Footer() {
     <footer className="bg-bg-secondary border-t border-border-custom mt-auto no-print">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         {/* Links Row */}
-        <div className="flex flex-wrap justify-center gap-6 mb-8">
+        <div className="flex flex-wrap justify-center gap-3 sm:gap-6 mb-8">
           {FOOTER_LINKS.map((link) => (
             <Link
               key={link.href}

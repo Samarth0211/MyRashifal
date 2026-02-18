@@ -12,7 +12,7 @@ export default function LanguageToggle() {
         <button
           key={l.code}
           onClick={() => setLang(l.code)}
-          className={`px-2 py-1 rounded text-xs font-medium transition-all ${
+          className={`px-3 py-2 sm:px-2 sm:py-1 rounded text-sm sm:text-xs font-medium transition-all min-w-[44px] ${
             lang === l.code
               ? 'bg-gold-primary/20 text-gold-primary'
               : 'text-text-secondary hover:text-text-primary'

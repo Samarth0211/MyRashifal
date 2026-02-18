@@ -308,6 +308,41 @@ select.input-mystical {
   }
 }
 
+/* Mobile: disable hover lift on touch devices (prevents tap-jump) */
+@media (hover: none) {
+  .card-mystical:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  .btn-gold:hover {
+    transform: none;
+  }
+  .btn-outline-gold:hover {
+    transform: none;
+  }
+}
+
+/* Devanagari / multilingual text support */
+.font-hindi,
+[lang="hi"],
+[lang="mr"] {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Mobile: tighter padding on cards & sections */
+@media (max-width: 640px) {
+  .card-mystical {
+    padding: 1rem;
+  }
+  .report-section {
+    padding-left: 1rem;
+  }
+  .highlight-box {
+    padding: 0.75rem 1rem;
+  }
+}
+
 /* Responsive helpers */
 @layer utilities {
   .text-balance {
