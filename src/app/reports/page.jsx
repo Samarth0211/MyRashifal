@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import ReportCard from '@/components/ReportCard';
 import LoadingScreen from '@/components/LoadingScreen';
 import { savePurchase, hasPurchased, saveReport, getReport } from '@/lib/storage';
@@ -241,8 +243,10 @@ export default function ReportsPage() {
         {reportData.sections?.map((section, i) => (
           <div key={i} className="report-section">
             <h3 className="text-xl">{section.heading}</h3>
-            <div className="text-text-primary text-sm leading-relaxed whitespace-pre-line">
-              {section.content}
+            <div className="report-markdown">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {section.content}
+              </ReactMarkdown>
             </div>
           </div>
         ))}

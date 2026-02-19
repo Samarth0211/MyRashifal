@@ -214,6 +214,84 @@ select.input-mystical {
   line-height: 1.8;
 }
 
+/* Report Markdown Content */
+.report-markdown {
+  font-size: 0.875rem;
+  line-height: 1.8;
+  color: var(--text-primary);
+}
+.report-markdown h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--gold-light);
+  margin: 1.5rem 0 0.5rem;
+}
+.report-markdown h3:first-child {
+  margin-top: 0;
+}
+.report-markdown p {
+  margin-bottom: 0.75rem;
+  line-height: 1.8;
+}
+.report-markdown strong {
+  color: var(--gold-light);
+  font-weight: 700;
+}
+.report-markdown ul,
+.report-markdown ol {
+  padding-left: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+.report-markdown ul {
+  list-style-type: disc;
+}
+.report-markdown ol {
+  list-style-type: decimal;
+}
+.report-markdown li {
+  margin-bottom: 0.3rem;
+  line-height: 1.7;
+}
+.report-markdown li::marker {
+  color: var(--gold-primary);
+}
+.report-markdown blockquote {
+  border-left: 2px solid var(--gold-primary);
+  padding-left: 1rem;
+  margin: 0.75rem 0;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+.report-markdown table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.8125rem;
+}
+.report-markdown thead th {
+  background: rgba(212, 160, 23, 0.15);
+  color: var(--gold-light);
+  font-weight: 700;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  border-bottom: 2px solid var(--gold-primary);
+  white-space: nowrap;
+}
+.report-markdown tbody td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.report-markdown tbody tr:hover {
+  background: rgba(212, 160, 23, 0.05);
+}
+.report-markdown table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Highlight Box */
 .highlight-box {
   background: linear-gradient(135deg, rgba(212, 160, 23, 0.1), rgba(245, 197, 66, 0.05));
@@ -304,6 +382,24 @@ select.input-mystical {
   .highlight-box {
     background: #f5f5f5 !important;
     border-color: #ccc !important;
+  }
+  .report-markdown strong {
+    color: #333 !important;
+  }
+  .report-markdown h3 {
+    color: #333 !important;
+  }
+  .report-markdown thead th {
+    background: #eee !important;
+    color: #333 !important;
+    border-bottom-color: #333 !important;
+  }
+  .report-markdown tbody td {
+    border-bottom-color: #ddd !important;
+  }
+  .report-markdown blockquote {
+    border-left-color: #333 !important;
+    color: #555 !important;
   }
 }
 

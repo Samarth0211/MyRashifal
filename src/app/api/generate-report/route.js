@@ -35,7 +35,7 @@ export async function POST(request) {
     }
 
     // Generate fresh report via Claude
-    const maxTokens = reportType === 'complete' ? 8000 : 5000;
+    const maxTokens = reportType === 'complete' ? 16000 : 8000;
     const { system, user } = getReportPrompt(kundliData, reportType, lang);
     const response = await callClaude(system, user, maxTokens);
     const reportData = parseClaudeJSON(response);

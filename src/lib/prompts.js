@@ -18,7 +18,14 @@ Your interpretations must be:
 - Balanced (mention both positive and challenging aspects)
 - Culturally appropriate for an Indian audience
 
-CRITICAL: Always respond in valid JSON format as specified in each prompt. No markdown, no code blocks — pure JSON only.`;
+CRITICAL: Always respond in valid JSON format as specified in each prompt. The outer response must be pure JSON (no markdown code blocks wrapping it). However, the "content" string values INSIDE the JSON should use rich markdown formatting:
+- Use ### for sub-headings within a section
+- Use **bold** for key terms, planet names, and important findings
+- Use bullet lists (- item) for listing multiple points
+- Use markdown tables (| col1 | col2 |) where data comparison is useful (e.g., planetary strengths, month-by-month forecasts, compatibility scores)
+- Use > blockquotes for classical text references
+- Write 4-6 substantial paragraphs per section minimum — be VERY detailed and thorough
+- Never leave a section as a single short paragraph`;
 
 export function getKundliInterpretationPrompt(birthDetails, calculatedData, lang = 'en') {
   return {
@@ -100,9 +107,18 @@ export function getKundliPrompt(birthDetails, lang = 'en') {
 export function getReportPrompt(kundliData, reportType, lang = 'en') {
   const langPrefix = getLangInstruction(lang);
   const reportPrompts = {
-    career: `${langPrefix}Based on the following accurately calculated Kundli data, generate a comprehensive Career & Wealth Report. The planetary positions below are computed from astronomical ephemeris — use them as-is for your interpretation.
+    career: `${langPrefix}Based on the following accurately calculated Kundli data, generate a VERY DETAILED and COMPREHENSIVE Career & Wealth Report. The planetary positions below are computed from astronomical ephemeris — use them as-is for your interpretation.
 
 ${JSON.stringify(kundliData, null, 2)}
+
+IMPORTANT FORMATTING RULES for each section's "content" field:
+- Write 4-6 detailed paragraphs minimum per section
+- Use ### sub-headings to break content into logical parts
+- Use **bold** for planet names, sign names, house numbers, and key findings
+- Use bullet lists (- item) for listing career fields, strengths, challenges
+- Use markdown tables where comparison data fits (e.g., planetary strength table, month-by-month career outlook)
+- Reference classical texts occasionally (e.g., "As per Brihat Parashara Hora Shastra...")
+- Be EXTREMELY specific to THIS chart — no generic advice
 
 Return JSON:
 {
@@ -110,40 +126,46 @@ Return JSON:
   "sections": [
     {
       "heading": "10th House Analysis & Career Indications",
-      "content": "string (detailed analysis)"
+      "content": "markdown string — Analyze the 10th house sign, its lord's placement and strength, planets in/aspecting 10th house. Include a table showing 10th house lord dignity, nakshatra, and career significations. Discuss Karmasthana lord in detail."
     },
     {
       "heading": "Dashamsa (D-10) Chart Interpretation",
-      "content": "string"
+      "content": "markdown string — Interpret the D-10 divisional chart. Discuss Lagna and 10th lord in Dashamsa, key planetary positions, and their impact on professional success."
     },
     {
       "heading": "Dhana Yoga & Wealth Combinations",
-      "content": "string"
+      "content": "markdown string — List ALL dhana yogas present with a table (Yoga Name | Planets | Houses | Effect). Analyze 2nd house (savings), 11th house (gains), and their lords. Discuss wealth accumulation potential."
     },
     {
       "heading": "Current Dasha Impact on Career",
-      "content": "string"
+      "content": "markdown string — Deep analysis of current Mahadasha-Antardasha on career. Include a timeline table of upcoming dasha transitions and expected career shifts. What to expect and when."
     },
     {
       "heading": "Best Career Fields For You",
-      "content": "string (list specific industries and roles)"
+      "content": "markdown string — List 8-10 specific career fields with reasoning. Use bullet points. Include both primary recommendations and alternative paths. Rank them by planetary strength."
     },
     {
       "heading": "Next 12 Months Career Forecast",
-      "content": "string (month-by-month highlights)"
+      "content": "markdown string — Create a table with Month | Transit | Career Impact | Action Item. Cover all 12 months with specific transit effects on career house. Highlight best and worst months."
     },
     {
       "heading": "Remedies for Career Obstacles",
-      "content": "string (specific remedies based on chart)"
+      "content": "markdown string — Specific remedies: gemstones (with wearing instructions), mantras (with count), charity, fasting days, yantra recommendations. Use bullet lists. Include remedies for EACH afflicted career planet."
     }
   ],
-  "highlights": ["string", "string", "string"],
-  "overallOutlook": "string"
+  "highlights": ["string (key finding 1)", "string (key finding 2)", "string (key finding 3)", "string (key finding 4)", "string (key finding 5)"],
+  "overallOutlook": "string (3-4 sentence comprehensive career outlook)"
 }`,
 
-    marriage: `${langPrefix}Based on the following accurately calculated Kundli data, generate a comprehensive Marriage & Relationship Report:
+    marriage: `${langPrefix}Based on the following accurately calculated Kundli data, generate a VERY DETAILED and COMPREHENSIVE Marriage & Relationship Report:
 
 ${JSON.stringify(kundliData, null, 2)}
+
+IMPORTANT FORMATTING RULES for each section's "content" field:
+- Write 4-6 detailed paragraphs minimum per section
+- Use ### sub-headings, **bold** for key terms, bullet lists, and markdown tables
+- Be EXTREMELY specific to THIS chart — reference exact planet placements
+- Include classical text references where appropriate
 
 Return JSON:
 {
@@ -151,40 +173,46 @@ Return JSON:
   "sections": [
     {
       "heading": "7th House Analysis & Spouse Characteristics",
-      "content": "string"
+      "content": "markdown string — Analyze 7th house sign, lord placement, planets aspecting/occupying 7th house. Create a table: Planet | Influence on 7th House | Effect. Describe spouse appearance, nature, profession, and family background based on chart indicators."
     },
     {
       "heading": "Manglik Dosha Assessment",
-      "content": "string (severity, remedies if applicable)"
+      "content": "markdown string — Detailed Mars analysis: house placement, sign, aspects. Severity level with explanation. Table of Manglik factors (Mars position, cancellation yogas if any). If Manglik, describe exact impact and all cancellation conditions."
     },
     {
       "heading": "Venus & Jupiter Placement Analysis",
-      "content": "string"
+      "content": "markdown string — Venus (Kalatra Karaka) analysis: sign, house, nakshatra, dignity, aspects. Jupiter's blessing on marriage. Table showing Venus strength factors. How these placements affect love, romance, and marital happiness."
     },
     {
-      "heading": "Upapada Lagna Analysis",
-      "content": "string"
+      "heading": "Upapada Lagna & Navamsa Analysis",
+      "content": "markdown string — Navamsa chart interpretation for marriage. D-9 Lagna, 7th lord in Navamsa, Venus in Navamsa. Quality of married life, spouse's characteristics from Navamsa perspective."
     },
     {
       "heading": "Marriage Timing Prediction",
-      "content": "string (dasha-based timing)"
+      "content": "markdown string — Dasha-based timing analysis. Table: Dasha Period | Duration | Marriage Probability | Reasoning. Transit triggers (Jupiter, Saturn over 7th house). Specific year/period predictions for marriage."
     },
     {
       "heading": "Relationship Strengths & Challenges",
-      "content": "string"
+      "content": "markdown string — Separate strengths and challenges with bullet lists. Include emotional compatibility indicators, physical compatibility, communication style based on Mercury/Moon placements. What makes relationships work/difficult for this native."
     },
     {
       "heading": "Remedies for Relationship Harmony",
-      "content": "string"
+      "content": "markdown string — Gemstone recommendations, mantras with japa count, fasting days, charity suggestions, temple visits. Use bullet list format. Include remedies specific to each afflicted relationship planet."
     }
   ],
-  "highlights": ["string", "string", "string"],
-  "overallOutlook": "string"
+  "highlights": ["string", "string", "string", "string", "string"],
+  "overallOutlook": "string (3-4 sentence comprehensive marriage outlook)"
 }`,
 
-    health: `${langPrefix}Based on the following accurately calculated Kundli data, generate a comprehensive Health & Wellness Report:
+    health: `${langPrefix}Based on the following accurately calculated Kundli data, generate a VERY DETAILED and COMPREHENSIVE Health & Wellness Report:
 
 ${JSON.stringify(kundliData, null, 2)}
+
+IMPORTANT FORMATTING RULES for each section's "content" field:
+- Write 4-6 detailed paragraphs minimum per section
+- Use ### sub-headings, **bold** for key terms, bullet lists, and markdown tables
+- Be EXTREMELY specific to THIS chart — reference exact planet placements
+- Include classical text references where appropriate
 
 Return JSON:
 {
@@ -192,77 +220,92 @@ Return JSON:
   "sections": [
     {
       "heading": "6th & 8th House Analysis",
-      "content": "string"
+      "content": "markdown string — Detailed 6th house (disease) and 8th house (chronic illness, longevity) analysis. Table: House | Sign | Lord | Placement | Health Implication. Discuss afflictions, strengths, and disease resistance factors."
     },
     {
-      "heading": "Vulnerable Body Areas",
-      "content": "string (based on planetary afflictions)"
+      "heading": "Planetary Health Indicators",
+      "content": "markdown string — Table of ALL planets: Planet | Sign | House | Body Part Ruled | Health Impact (positive/negative). Identify the most vulnerable and strongest health planets in the chart."
     },
     {
-      "heading": "Mental Health Indicators",
-      "content": "string"
+      "heading": "Vulnerable Body Areas & Disease Tendencies",
+      "content": "markdown string — Based on afflicted planets and houses, list specific body areas prone to issues. Use bullet list format. Discuss Vata/Pitta/Kapha imbalances indicated by planetary positions. Include potential disease tendencies with dasha triggers."
     },
     {
-      "heading": "Best Health Practices",
-      "content": "string (personalized recommendations)"
-    },
-    {
-      "heading": "Periods Requiring Extra Caution",
-      "content": "string (dasha-based health alerts)"
+      "heading": "Mental Health & Emotional Wellness",
+      "content": "markdown string — Moon, Mercury, and 4th house analysis for mental health. Table: Factor | Planet/House | Current State | Impact. Discuss stress patterns, anxiety indicators, emotional resilience. Specific meditation and mindfulness recommendations."
     },
     {
       "heading": "Ayurvedic Constitution (Prakriti)",
-      "content": "string (based on chart analysis)"
+      "content": "markdown string — Determine dominant dosha (Vata/Pitta/Kapha) from chart. Table: Dosha | Influencing Planets | Percentage. Personalized diet recommendations, daily routine (Dinacharya), seasonal advice (Ritucharya). Specific foods to favor/avoid."
+    },
+    {
+      "heading": "Health Timeline & Caution Periods",
+      "content": "markdown string — Table: Period/Dasha | Duration | Health Risk Level | Affected Area | Preventive Action. Cover next 5-10 years of dasha periods. Highlight which transits may trigger health issues."
+    },
+    {
+      "heading": "Remedies & Preventive Measures",
+      "content": "markdown string — Gemstone therapy, mantra healing, yoga asanas specific to chart, herbal recommendations, charity and fasting for health. Use detailed bullet lists with specific instructions for each remedy."
     }
   ],
-  "highlights": ["string", "string", "string"],
-  "overallOutlook": "string"
+  "highlights": ["string", "string", "string", "string", "string"],
+  "overallOutlook": "string (3-4 sentence comprehensive health outlook)"
 }`,
 
-    varshphal: `${langPrefix}Based on the following accurately calculated Kundli data, generate a comprehensive Annual Varshphal Report for the current year:
+    varshphal: `${langPrefix}Based on the following accurately calculated Kundli data, generate a VERY DETAILED and COMPREHENSIVE Annual Varshphal Report for the year 2025-2026:
 
 ${JSON.stringify(kundliData, null, 2)}
+
+IMPORTANT FORMATTING RULES for each section's "content" field:
+- Write 4-6 detailed paragraphs minimum per section
+- Use ### sub-headings, **bold** for key terms, bullet lists, and markdown tables
+- Be EXTREMELY specific to THIS chart — reference exact planet placements
+- The month-by-month section MUST use a detailed table format
 
 Return JSON:
 {
-  "title": "Annual Varshphal Report",
+  "title": "Annual Varshphal Report 2025-2026",
   "sections": [
     {
-      "heading": "Varsha Kundli Analysis",
-      "content": "string"
+      "heading": "Varsha Kundli (Solar Return) Analysis",
+      "content": "markdown string — Detailed analysis of the Solar Return chart for this year. Varsha Lagna, Varsha Lagna lord placement, key planetary positions in annual chart. Table: Planet | Varsha Position | Natal Position | Annual Effect."
     },
     {
-      "heading": "Muntha Position & Effects",
-      "content": "string"
+      "heading": "Muntha Position & Year Lord",
+      "content": "markdown string — Muntha sign and house analysis. Year lord identification and its strength. How Muntha's position colors the overall year. Tri-Pataki Chakra analysis if applicable."
     },
     {
       "heading": "Month-by-Month Forecast",
-      "content": "string (cover all 12 months with career, finance, relationships highlights)"
+      "content": "markdown string — MUST include a detailed table: Month | Key Transit | Career | Finance | Relationships | Health | Rating (1-5). After the table, provide 2-3 sentences of detailed commentary for EACH month highlighting the most important events and opportunities."
     },
     {
-      "heading": "Best Months for Career & Finance",
-      "content": "string"
+      "heading": "Career & Financial Outlook for the Year",
+      "content": "markdown string — Best months for career growth, job changes, business expansion. Financial gains/losses periods. Table: Quarter | Career Focus | Financial Trend | Key Action. Investment guidance based on planetary periods."
     },
     {
-      "heading": "Best Months for Relationships",
-      "content": "string"
+      "heading": "Relationships & Family Forecast",
+      "content": "markdown string — Marriage prospects, relationship quality through the year. Family harmony indicators. Social circle expansion periods. Table of best months for relationship milestones."
     },
     {
-      "heading": "Challenging Periods & Remedies",
-      "content": "string"
+      "heading": "Challenging Periods & Preventive Remedies",
+      "content": "markdown string — Identify the 3-4 most challenging periods with exact dates. Table: Period | Challenge | Cause (Transit/Dasha) | Severity | Remedy. Detailed preventive remedies for each challenging period."
     },
     {
-      "heading": "Year-End Summary & Key Takeaway",
-      "content": "string"
+      "heading": "Year-End Summary & Strategic Recommendations",
+      "content": "markdown string — Overall year rating. Top 5 opportunities to seize. Top 3 risks to mitigate. Quarterly strategy table: Quarter | Focus Area | Key Action | Expected Result. Long-term implications for the next 2-3 years."
     }
   ],
-  "highlights": ["string", "string", "string"],
-  "overallOutlook": "string"
+  "highlights": ["string", "string", "string", "string", "string"],
+  "overallOutlook": "string (3-4 sentence comprehensive annual outlook)"
 }`,
 
-    education: `${langPrefix}Based on the following accurately calculated Kundli data, generate a comprehensive Education & Competitive Exam Report:
+    education: `${langPrefix}Based on the following accurately calculated Kundli data, generate a VERY DETAILED and COMPREHENSIVE Education & Competitive Exam Report:
 
 ${JSON.stringify(kundliData, null, 2)}
+
+IMPORTANT FORMATTING RULES for each section's "content" field:
+- Write 4-6 detailed paragraphs minimum per section
+- Use ### sub-headings, **bold** for key terms, bullet lists, and markdown tables
+- Be EXTREMELY specific to THIS chart — reference exact planet placements
 
 Return JSON:
 {
@@ -270,32 +313,47 @@ Return JSON:
   "sections": [
     {
       "heading": "4th & 5th House Analysis",
-      "content": "string"
+      "content": "markdown string — 4th house (formal education) and 5th house (intelligence, higher learning) analysis. Table: House | Sign | Lord | Placement | Educational Impact. Discuss vidya yogas present in the chart."
     },
     {
       "heading": "Mercury & Jupiter Strength Assessment",
-      "content": "string"
+      "content": "markdown string — Detailed analysis of Mercury (intellect, communication) and Jupiter (wisdom, higher knowledge). Table: Planet | Sign | House | Dignity | Nakshatra | Educational Strength Rating. How these placements affect learning ability, memory, and analytical skills."
+    },
+    {
+      "heading": "Best Fields of Study",
+      "content": "markdown string — Based on planetary strengths and house lords, recommend 6-8 specific academic fields. Use bullet list with reasoning for each. Include both conventional and unconventional options. Rank by chart suitability."
     },
     {
       "heading": "Best Periods for Studies & Exams",
-      "content": "string"
+      "content": "markdown string — Table: Dasha Period | Duration | Study Favorability (High/Medium/Low) | Best For | Key Transit Support. Cover next 5-7 years. Highlight the absolute best windows for competitive exam preparation and attempts."
     },
     {
       "heading": "Foreign Education Prospects",
-      "content": "string (9th & 12th house analysis)"
+      "content": "markdown string — 9th house (higher education, foreign travel) and 12th house (foreign residence) analysis. Table of foreign education indicators and their strength. Specific countries/directions favorable. Best timing for foreign education pursuit."
     },
     {
       "heading": "Competitive Exam Success Indicators",
-      "content": "string"
+      "content": "markdown string — Analyze 6th house (competition), 10th house (achievement), and Mars/Saturn strength. Table: Factor | Planet/House | Strength | Exam Impact. Specific strategies for exam preparation based on chart. Best days of week, timings for study."
+    },
+    {
+      "heading": "Remedies for Academic Excellence",
+      "content": "markdown string — Saraswati puja details, Mercury/Jupiter strengthening remedies. Gemstones, mantras with japa count, study room vastu tips, charity recommendations. Use detailed bullet lists."
     }
   ],
-  "highlights": ["string", "string", "string"],
-  "overallOutlook": "string"
+  "highlights": ["string", "string", "string", "string", "string"],
+  "overallOutlook": "string (3-4 sentence comprehensive education outlook)"
 }`,
 
-    complete: `${langPrefix}Based on the following accurately calculated Kundli data, generate a Complete Life Report covering all aspects of life:
+    complete: `${langPrefix}Based on the following accurately calculated Kundli data, generate an EXTREMELY DETAILED and COMPREHENSIVE Complete Life Report covering ALL aspects of life. This is the premium bundle — it should be the most thorough report possible.
 
 ${JSON.stringify(kundliData, null, 2)}
+
+IMPORTANT FORMATTING RULES for each section's "content" field:
+- Write 5-8 detailed paragraphs minimum per section — this is the COMPLETE report, be exhaustive
+- Use ### sub-headings, **bold** for key terms, bullet lists, and markdown tables
+- Be EXTREMELY specific to THIS chart — reference exact planet placements
+- Include classical text references (Brihat Parashara, Phaladeepika, Saravali)
+- Every section should have at least one table for structured data
 
 Return JSON:
 {
@@ -303,47 +361,47 @@ Return JSON:
   "sections": [
     {
       "heading": "Personality & Character Analysis",
-      "content": "string (detailed)"
+      "content": "markdown string — Lagna analysis, Moon sign personality, Sun sign, dominant planet influence. Table: Key Personality Factor | Planet/Sign | Trait | Strength. Physical appearance tendencies, mental disposition, behavioral patterns. How others perceive vs inner self."
     },
     {
       "heading": "Career & Professional Life",
-      "content": "string"
+      "content": "markdown string — 10th house, Dashamsa, career yogas, best professions. Table: Career Field | Suitability Rating | Key Planet. Current dasha career impact. 12-month career forecast table."
     },
     {
       "heading": "Wealth & Financial Prospects",
-      "content": "string"
+      "content": "markdown string — 2nd, 11th house analysis, Dhana yogas. Table: Yoga | Planets | Effect | Period Active. Wealth accumulation periods, investment guidance, financial risks. Best periods for property purchase, business expansion."
     },
     {
       "heading": "Marriage & Relationships",
-      "content": "string"
+      "content": "markdown string — 7th house, Venus, Jupiter analysis. Spouse characteristics table. Manglik assessment. Marriage timing with dasha analysis. Relationship strengths/challenges. Navamsa chart interpretation."
     },
     {
       "heading": "Health & Wellness",
-      "content": "string"
+      "content": "markdown string — 6th, 8th house analysis. Table: Body Area | Ruling Planet | Risk Level | Prevention. Ayurvedic constitution, mental health indicators, health timeline with caution periods."
     },
     {
       "heading": "Education & Knowledge",
-      "content": "string"
+      "content": "markdown string — 4th, 5th house, Mercury/Jupiter analysis. Best study fields, competitive exam indicators. Foreign education prospects. Best study periods table."
     },
     {
       "heading": "Family & Children",
-      "content": "string"
+      "content": "markdown string — 4th house (mother/home), 9th house (father/fortune), 5th house (children). Table: Family Area | House | Lord | Placement | Outlook. Children timing, family harmony indicators, property from family."
     },
     {
       "heading": "Spiritual Growth & Past Life Karma",
-      "content": "string"
+      "content": "markdown string — 12th house (moksha), 9th house (dharma), 5th house (purva punya). Karmic debts indicated by Rahu/Ketu axis. Spiritual practices suited to this chart. Past life indicators and current life purpose."
     },
     {
-      "heading": "Annual Forecast",
-      "content": "string"
+      "heading": "Annual Forecast 2025-2026",
+      "content": "markdown string — Month-by-month table: Month | Career | Finance | Relationships | Health | Rating. Best and worst months highlighted. Key transit impacts throughout the year."
     },
     {
-      "heading": "Key Remedies & Recommendations",
-      "content": "string"
+      "heading": "Comprehensive Remedies & Life Recommendations",
+      "content": "markdown string — Table: Planet | Affliction | Gemstone | Mantra | Charity | Fasting Day. Yantra recommendations, temple visits, vastu tips. Lifestyle changes for overall chart harmony. Daily routine recommendations."
     }
   ],
-  "highlights": ["string", "string", "string", "string", "string"],
-  "overallOutlook": "string"
+  "highlights": ["string", "string", "string", "string", "string", "string", "string"],
+  "overallOutlook": "string (4-5 sentence comprehensive life outlook covering career, relationships, health, and spiritual growth)"
 }`,
   };
 
