@@ -22,30 +22,6 @@ export default function AskPage() {
   const [history, setHistory] = useState([]);
   const [freeRemaining, setFreeRemaining] = useState(FREE_LIMIT);
   const [dataLoading, setDataLoading] = useState(true);
-  const [loginUsername, setLoginUsername] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
-  const [loginError, setLoginError] = useState('');
-  const [loginLoading, setLoginLoading] = useState(false);
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoginError('');
-    setLoginLoading(true);
-    try {
-      const res = await signIn('credentials', {
-        username: loginUsername,
-        password: loginPassword,
-        redirect: false,
-      });
-      if (res?.error) {
-        setLoginError('Invalid username or password');
-      }
-    } catch {
-      setLoginError('Login failed. Please try again.');
-    } finally {
-      setLoginLoading(false);
-    }
-  };
 
   const EXAMPLE_QUESTIONS = [
     t('ask.example1'),
@@ -146,51 +122,20 @@ export default function AskPage() {
     );
   }
 
-  // Not signed in — show inline login form
+  // Not signed in
   if (!session?.user) {
     return (
-      <div className="max-w-md mx-auto px-4 py-20">
-        <div className="text-center mb-8">
-          <span className="text-6xl block mb-6">❓</span>
-          <h1 className="text-3xl font-heading font-bold mb-4">
-            {t('ask.signInRequired')}
-          </h1>
-          <p className="text-text-secondary">
-            {t('ask.signInDesc')}
-          </p>
-        </div>
-        <form onSubmit={handleLogin} className="card-mystical space-y-4">
-          <div>
-            <label className="block text-text-secondary text-sm mb-1">Username</label>
-            <input
-              type="text"
-              value={loginUsername}
-              onChange={(e) => setLoginUsername(e.target.value)}
-              placeholder="Enter username"
-              className="input-mystical"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-text-secondary text-sm mb-1">Password</label>
-            <input
-              type="password"
-              value={loginPassword}
-              onChange={(e) => setLoginPassword(e.target.value)}
-              placeholder="Enter password"
-              className="input-mystical"
-              required
-            />
-          </div>
-          {loginError && <p className="text-accent-red text-sm">{loginError}</p>}
-          <button
-            type="submit"
-            disabled={loginLoading || !loginUsername || !loginPassword}
-            className="btn-gold w-full"
-          >
-            {loginLoading ? 'Signing in...' : 'Sign In'}
-          </button>
-        </form>
+      <div className="max-w-lg mx-auto px-4 py-20 text-center">
+        <span className="text-6xl block mb-6">❓</span>
+        <h1 className="text-3xl font-heading font-bold mb-4">
+          {t('ask.signInRequired')}
+        </h1>
+        <p className="text-text-secondary mb-8">
+          {t('ask.signInDesc')}
+        </p>
+        <button onClick={() => signIn(undefined, { callbackUrl: '/ask' })} className="btn-gold">
+          {t('auth.signIn')}
+        </button>
       </div>
     );
   }

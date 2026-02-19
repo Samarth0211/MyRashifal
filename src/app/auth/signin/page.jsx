@@ -1,14 +1,42 @@
 'use client';
 
+import { useState } from 'react';
 import { signIn } from 'next-auth/react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Suspense } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 function SignInContent() {
   const { t } = useLanguage();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/';
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [loginLoading, setLoginLoading] = useState(false);
+
+  const handleCredentialsLogin = async (e) => {
+    e.preventDefault();
+    setLoginError('');
+    setLoginLoading(true);
+    try {
+      const res = await signIn('credentials', {
+        username,
+        password,
+        redirect: false,
+      });
+      if (res?.error) {
+        setLoginError('Invalid username or password');
+      } else {
+        router.push(callbackUrl);
+      }
+    } catch {
+      setLoginError('Login failed. Please try again.');
+    } finally {
+      setLoginLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4">
@@ -20,6 +48,46 @@ function SignInContent() {
         <p className="text-text-secondary text-sm mb-8">
           {t('auth.signInDesc')}
         </p>
+
+        {/* Credentials login */}
+        <form onSubmit={handleCredentialsLogin} className="space-y-3 mb-6 text-left">
+          <div>
+            <label className="block text-text-secondary text-sm mb-1">Username</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Enter username"
+              className="input-mystical"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-text-secondary text-sm mb-1">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter password"
+              className="input-mystical"
+              required
+            />
+          </div>
+          {loginError && <p className="text-accent-red text-sm">{loginError}</p>}
+          <button
+            type="submit"
+            disabled={loginLoading || !username || !password}
+            className="btn-gold w-full"
+          >
+            {loginLoading ? 'Signing in...' : 'Sign In'}
+          </button>
+        </form>
+
+        <div className="flex items-center gap-3 mb-6">
+          <div className="flex-1 h-px bg-border-custom" />
+          <span className="text-text-secondary text-xs">OR</span>
+          <div className="flex-1 h-px bg-border-custom" />
+        </div>
 
         <button
           onClick={() => signIn('google', { callbackUrl })}
