@@ -8,7 +8,7 @@ const isTestMode =
   typeof process !== 'undefined' &&
   process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID?.startsWith('rzp_test_');
 
-export default function PaymentButton({ amount, reportType, reportName, onPaymentSuccess, disabled, className }) {
+export default function PaymentButton({ amount, reportType, reportName, kundliId, onPaymentSuccess, disabled, className }) {
   const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [showTestInfo, setShowTestInfo] = useState(false);
@@ -31,6 +31,7 @@ export default function PaymentButton({ amount, reportType, reportName, onPaymen
           amount: amount * 100, // Razorpay takes amount in paise
           currency: 'INR',
           reportType,
+          kundliId: kundliId || undefined,
           notes: { reportName },
         }),
       });
@@ -57,6 +58,7 @@ export default function PaymentButton({ amount, reportType, reportName, onPaymen
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
                 reportType,
+                kundliId: kundliId || undefined,
               }),
             });
             const verifyData = await verifyRes.json();

@@ -8,24 +8,24 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'bg-primary': '#0a0a2e',
-        'bg-secondary': '#12123a',
-        'bg-card': '#1a1a4e',
-        'gold-primary': '#d4a017',
-        'gold-light': '#f5c542',
-        'text-primary': '#e8e8f0',
-        'text-secondary': '#9999bb',
-        'accent-red': '#e74c3c',
-        'accent-green': '#2ecc71',
-        'border-custom': '#2a2a5e',
+        'bg-primary': '#F9F7F2',
+        'bg-secondary': '#F1EDE5',
+        'bg-card': '#FFFFFF',
+        'gold-primary': '#86622F',
+        'gold-light': '#775624',
+        'text-primary': '#292638',
+        'text-secondary': '#716E79',
+        'accent-red': '#ef4444',
+        'accent-green': '#22c55e',
+        'border-custom': '#E4DFD6',
       },
       fontFamily: {
         heading: ['Playfair Display', 'serif'],
-        body: ['Lato', 'sans-serif'],
+        body: ['Inter', 'Lato', 'sans-serif'],
         hindi: ['Tiro Devanagari Hindi', 'serif'],
       },
       backgroundImage: {
-        'gold-gradient': 'linear-gradient(135deg, #d4a017, #f5c542)',
+        'gold-gradient': 'linear-gradient(135deg, #c9951a, #e8bf4b)',
       },
       animation: {
         'twinkle': 'twinkle 3s ease-in-out infinite',
@@ -34,14 +34,18 @@ module.exports = {
         'shimmer': 'shimmer 2s linear infinite',
         'spin-slow': 'spin 8s linear infinite',
         'float': 'float 6s ease-in-out infinite',
-        'glow': 'glow 2s ease-in-out infinite alternate',
-        'slide-up': 'slideUp 0.5s ease-out',
-        'fade-in': 'fadeIn 0.5s ease-out',
+        'fade-in': 'fadeIn 0.6s ease-out',
+        'slide-up': 'slideUp 0.6s ease-out',
+        'slide-up-delayed': 'slideUp 0.6s ease-out 0.15s both',
+        'slide-up-delayed-2': 'slideUp 0.6s ease-out 0.3s both',
+        'glow-pulse': 'glow-pulse 3s ease-in-out infinite',
+        'gradient-shift': 'gradient-shift 6s ease infinite',
+        'text-shimmer': 'text-shimmer 4s linear infinite',
       },
       keyframes: {
         twinkle: {
-          '0%, 100%': { opacity: '0.3' },
-          '50%': { opacity: '1' },
+          '0%, 100%': { opacity: '0.2' },
+          '50%': { opacity: '0.8' },
         },
         shimmer: {
           '0%': { backgroundPosition: '-200% 0' },
@@ -49,11 +53,7 @@ module.exports = {
         },
         float: {
           '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-10px)' },
-        },
-        glow: {
-          '0%': { boxShadow: '0 0 5px rgba(212, 160, 23, 0.3)' },
-          '100%': { boxShadow: '0 0 20px rgba(212, 160, 23, 0.6)' },
+          '50%': { transform: 'translateY(-8px)' },
         },
         slideUp: {
           '0%': { transform: 'translateY(20px)', opacity: '0' },
@@ -62,6 +62,19 @@ module.exports = {
         fadeIn: {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
+        },
+        'glow-pulse': {
+          '0%, 100%': { boxShadow: '0 0 20px rgba(201, 149, 26, 0.1)' },
+          '50%': { boxShadow: '0 0 40px rgba(201, 149, 26, 0.25), 0 0 80px rgba(201, 149, 26, 0.1)' },
+        },
+        'gradient-shift': {
+          '0%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+          '100%': { backgroundPosition: '0% 50%' },
+        },
+        'text-shimmer': {
+          '0%': { backgroundPosition: '-200% center' },
+          '100%': { backgroundPosition: '200% center' },
         },
       },
     },

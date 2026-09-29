@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<title>MyRashifal+ Reel - Daily Rashifal</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1080px; height: 1920px;
+    background: #060918;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden; position: relative;
+  }
+
+  .stars {
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 80px 150px, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1.5px 1.5px at 400px 300px, rgba(255,255,255,0.3), transparent),
+      radial-gradient(1px 1px at 700px 500px, rgba(255,255,255,0.5), transparent),
+      radial-gradient(1px 1px at 250px 900px, rgba(255,255,255,0.3), transparent),
+      radial-gradient(1.5px 1.5px at 900px 1200px, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1px 1px at 150px 1600px, rgba(255,255,255,0.3), transparent);
+    animation: twinkle 4s ease-in-out infinite alternate;
+  }
+  @keyframes twinkle { 0% { opacity: 0.6; } 100% { opacity: 1; } }
+
+  .glow {
+    position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none;
+  }
+  .glow1 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(201,149,26,0.12), transparent 70%);
+    top: 100px; left: -100px;
+  }
+  .glow2 {
+    width: 350px; height: 350px;
+    background: radial-gradient(circle, rgba(100,80,200,0.08), transparent 70%);
+    bottom: 300px; right: -80px;
+  }
+
+  .content {
+    position: relative; z-index: 10;
+    display: flex; flex-direction: column; align-items: center;
+    height: 100%; padding: 60px 40px;
+  }
+
+  /* Brand */
+  .brand {
+    align-self: flex-start;
+    opacity: 0; animation: fadeIn 0.5s ease 0.2s forwards;
+  }
+  .brand h2 { font-size: 28px; font-weight: 700; color: #e8bf4b; }
+  .brand p { font-size: 16px; color: #8a90a8; margin-top: 2px; }
+
+  /* Title */
+  .title {
+    text-align: center; margin-top: 40px;
+    opacity: 0; animation: slideUp 0.7s ease 0.4s forwards;
+  }
+  .title h1 { font-size: 56px; font-weight: 800; color: #fff; }
+  .title h1 span { color: #e8bf4b; }
+
+  /* Zodiac grid */
+  .zodiac-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 14px; width: 100%; padding: 0 20px;
+    margin-top: 40px;
+  }
+  .zodiac-card {
+    background: rgba(15,20,45,0.8);
+    border: 1px solid rgba(201,149,26,0.15);
+    border-radius: 16px;
+    padding: 24px 8px 18px;
+    text-align: center;
+    opacity: 0; transform: scale(0.8);
+    animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  .zodiac-card:nth-child(1) { animation-delay: 0.8s; }
+  .zodiac-card:nth-child(2) { animation-delay: 0.9s; }
+  .zodiac-card:nth-child(3) { animation-delay: 1.0s; }
+  .zodiac-card:nth-child(4) { animation-delay: 1.1s; }
+  .zodiac-card:nth-child(5) { animation-delay: 1.2s; }
+  .zodiac-card:nth-child(6) { animation-delay: 1.3s; }
+  .zodiac-card:nth-child(7) { animation-delay: 1.4s; }
+  .zodiac-card:nth-child(8) { animation-delay: 1.5s; }
+  .zodiac-card:nth-child(9) { animation-delay: 1.6s; }
+  .zodiac-card:nth-child(10) { animation-delay: 1.7s; }
+  .zodiac-card:nth-child(11) { animation-delay: 1.8s; }
+  .zodiac-card:nth-child(12) { animation-delay: 1.9s; }
+
+  .zodiac-card .symbol {
+    font-size: 42px; color: #e8bf4b; line-height: 1;
+  }
+  .zodiac-card .name {
+    font-size: 15px; color: #8a90a8; margin-top: 8px; font-weight: 500;
+  }
+
+  /* Bottom section */
+  .bottom {
+    margin-top: auto; text-align: center; width: 100%;
+    padding-bottom: 80px;
+  }
+  .bottom-text {
+    font-size: 32px; font-weight: 700; color: #fff;
+    opacity: 0; animation: slideUp 0.6s ease 2.2s forwards;
+    margin-bottom: 8px;
+  }
+  .bottom-sub {
+    font-size: 22px; color: #8a90a8;
+    opacity: 0; animation: slideUp 0.5s ease 2.4s forwards;
+    margin-bottom: 30px;
+  }
+  .bottom-hindi {
+    font-size: 22px; color: rgba(138,144,168,0.6);
+    opacity: 0; animation: fadeIn 0.5s ease 3s forwards;
+    margin-bottom: 12px;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #c9951a, #e8bf4b);
+    color: #060918; font-size: 28px; font-weight: 700;
+    padding: 18px 44px; border-radius: 14px;
+    opacity: 0; animation: slideUp 0.6s ease 2.6s forwards;
+    box-shadow: 0 6px 24px rgba(201,149,26,0.3);
+  }
+
+  .url {
+    font-size: 20px; color: #8a90a8; margin-top: 16px;
+    opacity: 0; animation: fadeIn 0.5s ease 2.8s forwards;
+  }
+
+  @keyframes fadeIn { to { opacity: 1; } }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes popIn { to { opacity: 1; transform: scale(1); } }
+</style>
+</head>
+<body>
+  <div class="stars"></div>
+  <div class="glow glow1"></div>
+  <div class="glow glow2"></div>
+
+  <div class="content">
+    <div class="brand">
+      <h2>MyRashifal+</h2>
+      <p>Vedic Astrology & Kundli</p>
+    </div>
+
+    <div class="title">
+      <h1>Today's <span>Rashifal</span></h1>
+    </div>
+
+    <div class="zodiac-grid">
+      <div class="zodiac-card"><div class="symbol">&#x2648;</div><div class="name">Aries</div></div>
+      <div class="zodiac-card"><div class="symbol">&#x2649;</div><div class="name">Taurus</div></div>
+      <div class="zodiac-card"><div class="symbol">&#x264A;</div><div class="name">Gemini</div></div>
+      <div class="zodiac-card"><div class="symbol">&#x264B;</div><div class="name">Cancer</div></div>
+      <div class="zodiac-card"><div class="symbol">&#x264C;</div><div class="name">Leo</div></div>
+      <div class="zodiac-card"><div class="symbol">&#x264D;</div><div class="name">Virgo</div></div>
+      <div class="zodiac-card"><div class="symbol">&#x264E;</div><div class="name">Libra</div></div>
+      <div class="zodiac-card"><div class="symbol">&#x264F;</div><div class="name">Scorpio</div></div>
+      <div class="zodiac-card"><div class="symbol">&#x2650;</div><div class="name">Sagittarius</div></div>
+      <div class="zodiac-card"><div class="symbol">&#x2651;</div><div class="name">Capricorn</div></div>
+      <div class="zodiac-card"><div class="symbol">&#x2652;</div><div class="name">Aquarius</div></div>
+      <div class="zodiac-card"><div class="symbol">&#x2653;</div><div class="name">Pisces</div></div>
+    </div>
+
+    <div class="bottom">
+      <p class="bottom-text">Personalized Daily Predictions</p>
+      <p class="bottom-sub">Check your rashi for today - 100% free</p>
+      <div class="cta-btn">Check Your Rashifal &gt;</div>
+      <p class="url">myrashifal.in/rashifal</p>
+      <p class="bottom-hindi">&#x0906;&#x091C; &#x0915;&#x093E; &#x0930;&#x093E;&#x0936;&#x093F;&#x092B;&#x0932; &#x092A;&#x0922;&#x093C;&#x0947;&#x0902; - &#x092E;&#x0941;&#x092B;&#x093C;&#x094D;&#x0924;</p>
+    </div>
+  </div>
+</body>
+</html>

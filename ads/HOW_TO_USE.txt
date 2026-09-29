@@ -1,0 +1,101 @@
+MyRashifal+ Ad Creatives
+========================
+
+STATIC ADS (ready to upload):
+- ad1_free_kundli_feed_1080x1080.png     (Instagram Feed)
+- ad1_free_kundli_story_1080x1920.png    (Instagram Story)
+- ad2_daily_rashifal_feed_1080x1080.png  (Instagram Feed)
+- ad3_kundli_matching_feed_1080x1080.png (Instagram Feed)
+- ad4_career_report_feed_1080x1080.png   (Instagram Feed)
+- ad5_app_coming_soon_feed_1080x1080.png (Instagram Feed)
+
+ANIMATED REELS (for screen-recording):
+- reel1_free_kundli.html
+- reel2_daily_rashifal.html
+- reel3_kundli_matching.html
+
+
+HOW TO CREATE REEL VIDEOS:
+==========================
+
+1. Open any reel HTML file in Google Chrome
+2. Press F11 for fullscreen (or resize window to 1080x1920 if recording)
+3. Use screen recording:
+   - Windows: Win + G (Xbox Game Bar) > Record
+   - OBS Studio (free): set canvas to 1080x1920, window capture
+   - Chrome DevTools: F12 > ... > More tools > Rendering > Emulate viewport 1080x1920
+4. Refresh the page (F5) to replay animations from start
+5. Record for ~6-8 seconds (animations complete in ~4s)
+6. Trim the video if needed
+7. Upload directly to Instagram Reels
+
+TIP: For best quality, use Chrome DevTools:
+  - Press F12 > Toggle Device Toolbar (Ctrl+Shift+M)
+  - Set dimensions to 1080 x 1920
+  - Click the 3-dot menu > Capture screenshot or record
+
+
+SUGGESTED POSTING SCHEDULE:
+===========================
+Week 1:
+  Mon: ad1 (Free Kundli) - feed post
+  Tue: reel1 - animated reel
+  Wed: ad2 (Daily Rashifal) - feed post
+  Thu: reel2 - animated reel
+  Fri: ad3 (Kundli Matching) - feed post
+  Sat: reel3 - animated reel
+  Sun: ad5 (App Coming Soon) - feed post
+
+Week 2:
+  Mon: ad4 (Career Report) - feed post
+  Tue: reel1 variation - story
+  Wed: ad1 story version - story
+  Thu: reel2 variation - reel
+  Fri: ad3 - carousel with before/after
+  Sat: ad2 - story
+  Sun: ad5 - story
+
+
+CAPTIONS & HASHTAGS:
+====================
+
+For Free Kundli (ad1):
+  "Get your complete Vedic birth chart - 100% FREE
+  9 planets, 12 houses, nakshatras & dasha periods
+  Based on real astronomical calculations
+
+  Try now: myrashifal.in
+
+  #Kundli #VedicAstrology #BirthChart #FreeKundli #Astrology #Jyotish #Rashifal #Horoscope"
+
+For Daily Rashifal (ad2):
+  "Check today's rashifal for your zodiac sign
+  Personalized daily predictions based on Vedic astrology
+
+  Read now: myrashifal.in/rashifal
+
+  #DailyRashifal #Horoscope #TodaysRashifal #ZodiacSign #AajKaRashifal"
+
+For Kundli Matching (ad3):
+  "Before you say yes, check your compatibility
+  Ashtakoot Gun Milan - 36 points system + Manglik check
+
+  Check now: myrashifal.in/matching
+
+  #KundliMatching #GunMilan #MarriageCompatibility #WeddingAstrology"
+
+For Career Report (ad4):
+  "What does your birth chart say about your career?
+  Personalized career & wealth analysis based on your 10th house
+
+  Get your report: myrashifal.in/reports
+
+  #CareerAstrology #VedicAstrology #CareerGuidance #WealthReport"
+
+For App Coming Soon (ad5):
+  "MyRashifal+ Android app coming soon to Google Play!
+  Get notified when we launch
+
+  Sign up: myrashifal.in/download
+
+  #AndroidApp #ComingSoon #MyRashifal #VedicAstrology #NewApp"

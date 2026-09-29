@@ -56,7 +56,7 @@ export async function POST(request) {
     const answerData = parseClaudeJSON(response);
 
     // Save to DB
-    await saveQuestionToDB(userId, {
+    const result = await saveQuestionToDB(userId, {
       question,
       answer: answerData,
       isFree,
@@ -67,6 +67,7 @@ export async function POST(request) {
 
     return NextResponse.json({
       ...answerData,
+      questionId: result.insertedId.toString(),
       questionCount: newCount,
       freeRemaining: Math.max(0, FREE_QUESTION_LIMIT - newCount),
     });

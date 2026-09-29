@@ -8,4 +8,4 @@ export const SUPPORTED_LANGS = [
   { code: 'hi', label: 'हिं', nativeLabel: 'हिन्दी' },
   { code: 'mr', label: 'मर', nativeLabel: 'मराठी' },
 ];
-export const DEFAULT_LANG = 'en';
+export const DEFAULT_LANG = 'mr';

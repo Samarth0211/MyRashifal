@@ -1,0 +1,11 @@
+[Unit]
+Description=MyRashifal instagram-weekly-ad schedule
+
+[Timer]
+OnCalendar=Sun *-*-* 04:30:00 UTC
+Persistent=false
+AccuracySec=1s
+Unit=myrashifal-cron@instagram-weekly-ad.service
+
+[Install]
+WantedBy=timers.target

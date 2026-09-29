@@ -1,0 +1,36 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/daily-rashifal",
+      "schedule": "30 1 * * *"
+    },
+    {
+      "path": "/api/cron/push-rashifal",
+      "schedule": "30 1 * * *"
+    },
+    {
+      "path": "/api/cron/instagram-morning",
+      "schedule": "30 1 * * *"
+    },
+    {
+      "path": "/api/cron/instagram-evening",
+      "schedule": "30 12 * * *"
+    },
+    {
+      "path": "/api/cron/instagram-weekly-ad",
+      "schedule": "30 4 * * 0"
+    },
+    {
+      "path": "/api/cron/instagram-token-refresh",
+      "schedule": "0 6 1,15 * *"
+    },
+    {
+      "path": "/api/cron/festival-offer",
+      "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cron/promo-email",
+      "schedule": "0 3 */3 * *"
+    }
+  ]
+}

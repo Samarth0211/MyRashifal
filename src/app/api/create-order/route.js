@@ -9,7 +9,7 @@ const razorpay = new Razorpay({
 
 export async function POST(request) {
   try {
-    const { amount, currency, reportType, notes } = await request.json();
+    const { amount, currency, reportType, kundliId, notes } = await request.json();
 
     if (!amount || amount <= 0) {
       return NextResponse.json(
@@ -24,6 +24,7 @@ export async function POST(request) {
       receipt: `receipt_${uuid().slice(0, 8)}`,
       notes: {
         reportType: reportType || 'unknown',
+        kundliId: kundliId || '',
         ...notes,
       },
     };

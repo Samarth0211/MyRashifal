@@ -1,0 +1,11 @@
+[Unit]
+Description=MyRashifal instagram-token-refresh schedule
+
+[Timer]
+OnCalendar=*-*-01,15 06:00:00 UTC
+Persistent=false
+AccuracySec=1s
+Unit=myrashifal-cron@instagram-token-refresh.service
+
+[Install]
+WantedBy=timers.target

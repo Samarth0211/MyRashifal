@@ -5,6 +5,8 @@ import PaymentButton from '@/components/PaymentButton';
 import LoadingScreen from '@/components/LoadingScreen';
 import { PRICING } from '@/lib/constants';
 import { savePurchase } from '@/lib/storage';
+import AdBanner from '@/components/AdBanner';
+import InArticleAd from '@/components/InArticleAd';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const EVENT_KEYS = [
@@ -220,6 +222,8 @@ export default function MuhuratPage() {
             ))}
           </div>
 
+          <InArticleAd className="max-w-4xl mx-auto" />
+
           {/* General Advice */}
           {results.generalAdvice && (
             <div className="highlight-box mb-8">
@@ -227,6 +231,8 @@ export default function MuhuratPage() {
               <p className="text-text-primary text-sm leading-relaxed">{results.generalAdvice}</p>
             </div>
           )}
+
+          <AdBanner format="auto" className="max-w-4xl mx-auto mt-4" />
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10 no-print">

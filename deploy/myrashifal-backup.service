@@ -1,0 +1,14 @@
+[Unit]
+Description=Back up MyRashifal MongoDB
+After=mongod.service
+Requires=mongod.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/myrashifal/current
+ExecStart=/usr/bin/node deploy/backup.cjs
+UMask=0077
+Nice=10
+IOSchedulingClass=idle
+NoNewPrivileges=true
+PrivateTmp=true

@@ -11,6 +11,7 @@ export async function POST(request) {
       razorpay_signature,
       reportType,
       amount,
+      kundliId,
     } = await request.json();
 
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
@@ -35,6 +36,7 @@ export async function POST(request) {
       if (session?.user?.id) {
         await savePurchaseToDB(session.user.id, {
           reportType,
+          kundliId: kundliId || null,
           paymentId: razorpay_payment_id,
           razorpayOrderId: razorpay_order_id,
           amount: amount || null,

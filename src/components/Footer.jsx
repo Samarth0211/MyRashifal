@@ -1,50 +1,11 @@
 'use client';
-
 import Link from 'next/link';
+import Brand from './Brand';
 import { useLanguage } from '@/contexts/LanguageContext';
-
+import { designCopy } from '@/translations/design';
 export default function Footer() {
-  const { t } = useLanguage();
-
-  const FOOTER_LINKS = [
-    { href: '/', label: t('nav.home') },
-    { href: '/kundli', label: t('nav.kundli') },
-    { href: '/reports', label: t('nav.reports') },
-    { href: '/matching', label: t('nav.matching') },
-    { href: '/muhurat', label: t('nav.muhurat') },
-    { href: '/rashifal', label: t('nav.dailyRashifal') },
-  ];
-
-  return (
-    <footer className="bg-bg-secondary border-t border-border-custom mt-auto no-print">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        {/* Links Row */}
-        <div className="flex flex-wrap justify-center gap-3 sm:gap-6 mb-8">
-          {FOOTER_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-text-secondary hover:text-gold-primary transition-colors text-sm no-underline"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </div>
-
-        {/* Divider */}
-        <div className="gold-divider" />
-
-        {/* Disclaimer */}
-        <p className="text-text-secondary text-xs text-center max-w-3xl mx-auto leading-relaxed mb-6">
-          {t('footer.disclaimer')}
-        </p>
-
-        {/* Bottom Row */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-text-secondary text-xs">
-          <p>{t('footer.madeIn')}</p>
-          <p>{t('footer.rights', { year: new Date().getFullYear() })}</p>
-        </div>
-      </div>
-    </footer>
-  );
+  const { lang, t } = useLanguage();
+  const c = designCopy[lang] || designCopy.en;
+  const groups = [[c.explore,[['/kundli',t('nav.kundli')],['/rashifal',t('nav.dailyRashifal')],['/matching',t('nav.matching')],['/reports',t('nav.reports')]]],[c.discover,[['/panchang',t('nav.panchang')],['/numerology',t('nav.numerology')],['/transits',t('nav.transits')],['/muhurat',t('nav.muhurat')]]],[c.connect,[['/blog',c.journal],['/astrologers',t('nav.astrologers')],['/feedback',c.feedback],['/remedies',t('nav.remedies')]]]];
+  return <footer className="site-footer no-print"><div className="design-container"><div className="footer-grid"><div className="footer-brand"><Brand/><p>{c.footerDesc}</p><span>English · हिंदी · मराठी</span></div>{groups.map(([heading,links]) => <div key={heading}><h2>{heading}</h2>{links.map(([href,label]) => <Link key={href} href={href}>{label}</Link>)}</div>)}</div><div className="footer-bottom"><p>© {new Date().getFullYear()} MyRashifal+. {t('footer.madeIn')}</p><p>{t('footer.disclaimer')}</p></div></div></footer>;
 }

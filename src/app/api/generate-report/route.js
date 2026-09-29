@@ -6,7 +6,7 @@ import { saveReportToDB, getReportFromDB } from '@/lib/db';
 
 export async function POST(request) {
   try {
-    const { kundliData, reportType, lang = 'en' } = await request.json();
+    const { kundliData, reportType, kundliId, lang = 'en' } = await request.json();
 
     if (!kundliData || !reportType) {
       return NextResponse.json(
@@ -15,7 +15,7 @@ export async function POST(request) {
       );
     }
 
-    const validTypes = ['career', 'marriage', 'health', 'varshphal', 'education', 'complete'];
+    const validTypes = ['career', 'marriage', 'health', 'varshphal', 'education', 'complete', 'gemstone', 'child', 'property', 'foreign', 'sadesati'];
     if (!validTypes.includes(reportType)) {
       return NextResponse.json(
         { error: 'Invalid report type' },
@@ -28,7 +28,7 @@ export async function POST(request) {
     const userId = session?.user?.id;
 
     if (userId) {
-      const cachedReport = await getReportFromDB(userId, reportType);
+      const cachedReport = await getReportFromDB(userId, reportType, kundliId || null);
       if (cachedReport) {
         return NextResponse.json(cachedReport, { status: 200 });
       }
@@ -42,7 +42,7 @@ export async function POST(request) {
 
     // Save to DB for logged-in users
     if (userId) {
-      await saveReportToDB(userId, reportType, reportData);
+      await saveReportToDB(userId, reportType, reportData, kundliId || null);
     }
 
     return NextResponse.json(reportData, { status: 200 });

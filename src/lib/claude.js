@@ -1,15 +1,29 @@
-export async function callClaude(systemPrompt, userPrompt, maxTokens = 4000, model = 'claude-sonnet-4-20250514') {
+export const HAIKU_MODEL = 'claude-haiku-4-5-20251001';
+export const DEFAULT_MODEL = 'claude-sonnet-4-5-20250929';
+
+export async function callClaude(systemPrompt, userPrompt, maxTokens = 4000, model = DEFAULT_MODEL, { usePromptCaching = false } = {}) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'x-api-key': process.env.CLAUDE_API_KEY,
+    'anthropic-version': '2023-06-01',
+  };
+
+  // Build system field — use prompt caching if requested (caches the system prompt)
+  let system;
+  if (usePromptCaching) {
+    headers['anthropic-beta'] = 'prompt-caching-2024-07-31';
+    system = [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }];
+  } else {
+    system = systemPrompt;
+  }
+
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': process.env.CLAUDE_API_KEY,
-      'anthropic-version': '2023-06-01',
-    },
+    headers,
     body: JSON.stringify({
       model,
       max_tokens: maxTokens,
-      system: systemPrompt,
+      system,
       messages: [{ role: 'user', content: userPrompt }],
     }),
   });

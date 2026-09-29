@@ -7,6 +7,9 @@ import PaymentButton from '@/components/PaymentButton';
 import LoadingScreen from '@/components/LoadingScreen';
 import { PRICING } from '@/lib/constants';
 import { savePurchase } from '@/lib/storage';
+import AdBanner from '@/components/AdBanner';
+import InArticleAd from '@/components/InArticleAd';
+import StarRating from '@/components/StarRating';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const FREE_LIMIT = 5;
@@ -22,6 +25,9 @@ export default function AskPage() {
   const [history, setHistory] = useState([]);
   const [freeRemaining, setFreeRemaining] = useState(FREE_LIMIT);
   const [dataLoading, setDataLoading] = useState(true);
+  const [questionId, setQuestionId] = useState(null);
+  const [userRating, setUserRating] = useState(0);
+  const [ratingSubmitted, setRatingSubmitted] = useState(false);
 
   const EXAMPLE_QUESTIONS = [
     t('ask.example1'),
@@ -74,6 +80,9 @@ export default function AskPage() {
       }
       const data = await res.json();
       setAnswer(data);
+      setQuestionId(data.questionId || null);
+      setUserRating(0);
+      setRatingSubmitted(false);
       setHistory((prev) => [{ question, answer: data }, ...prev]);
       setFreeRemaining(data.freeRemaining ?? Math.max(0, freeRemaining - 1));
       setStep('answer');
@@ -97,6 +106,9 @@ export default function AskPage() {
       if (!res.ok) throw new Error('Failed');
       const data = await res.json();
       setAnswer(data);
+      setQuestionId(data.questionId || null);
+      setUserRating(0);
+      setRatingSubmitted(false);
       setHistory((prev) => [{ question, answer: data }, ...prev]);
       setStep('answer');
     } catch {
@@ -105,9 +117,27 @@ export default function AskPage() {
     }
   };
 
+  const handleRatingSubmit = async (rating) => {
+    setUserRating(rating);
+    if (!questionId) return;
+    try {
+      await fetch('/api/question/rate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ questionId, rating }),
+      });
+      setRatingSubmitted(true);
+    } catch {
+      // Rating is non-blocking — fail silently
+    }
+  };
+
   const handleNewQuestion = () => {
     setQuestion('');
     setAnswer(null);
+    setQuestionId(null);
+    setUserRating(0);
+    setRatingSubmitted(false);
     setStep('form');
     setError('');
   };
@@ -240,6 +270,8 @@ export default function AskPage() {
             )}
           </div>
 
+          <AdBanner format="auto" className="max-w-3xl mx-auto mt-4" />
+
           {/* Previous Questions */}
           {history.length > 0 && (
             <div className="mt-10">
@@ -354,6 +386,20 @@ export default function AskPage() {
               <p className="text-text-primary text-sm">{answer.remedy}</p>
             </div>
           )}
+
+          {/* Rating */}
+          <div className="card-mystical mb-6 text-center">
+            {ratingSubmitted ? (
+              <p className="text-accent-green font-medium">{t('question.rateThankYou')}</p>
+            ) : (
+              <>
+                <p className="text-text-secondary text-sm mb-3">{t('question.rateAnswer')}</p>
+                <StarRating value={userRating} onChange={handleRatingSubmit} size="text-3xl" />
+              </>
+            )}
+          </div>
+
+          <InArticleAd className="max-w-3xl mx-auto" />
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10 no-print">

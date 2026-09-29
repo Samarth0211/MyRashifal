@@ -1,0 +1,18 @@
+[Unit]
+Description=MyRashifal scheduled job %i
+After=myrashifal.service
+Requires=myrashifal.service
+
+[Service]
+Type=oneshot
+User=myrashifal
+Group=myrashifal
+WorkingDirectory=/opt/myrashifal/current
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node deploy/run-cron.cjs %i
+TimeoutStartSec=31min
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true

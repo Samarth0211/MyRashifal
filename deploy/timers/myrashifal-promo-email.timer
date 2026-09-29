@@ -1,0 +1,11 @@
+[Unit]
+Description=MyRashifal promo-email schedule
+
+[Timer]
+OnCalendar=*-*-01,04,07,10,13,16,19,22,25,28,31 03:00:00 UTC
+Persistent=false
+AccuracySec=1s
+Unit=myrashifal-cron@promo-email.service
+
+[Install]
+WantedBy=timers.target

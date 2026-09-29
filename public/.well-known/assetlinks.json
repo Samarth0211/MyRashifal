@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "in.myrashifal.app",
+      "sha256_cert_fingerprints": [
+        "85:88:F5:D6:F4:AD:3F:38:A4:42:5F:24:22:AF:93:66:64:2F:16:19:2F:C6:C8:CD:98:1F:5F:5C:32:76:EB:AD"
+      ]
+    }
+  }
+]

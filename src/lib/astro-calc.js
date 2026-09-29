@@ -84,7 +84,7 @@ const ABBR = {
 // HELPER FUNCTIONS
 // ============================================================
 
-function normalizeDeg(deg) {
+export function normalizeDeg(deg) {
   return ((deg % 360) + 360) % 360;
 }
 
@@ -96,11 +96,11 @@ function formatDegree(decimalDeg) {
   return `${degrees}°${minutes.toString().padStart(2, '0')}'`;
 }
 
-function getSignFromLon(siderealLon) {
+export function getSignFromLon(siderealLon) {
   return SIGNS[Math.floor(normalizeDeg(siderealLon) / 30)];
 }
 
-function getSignIndex(siderealLon) {
+export function getSignIndex(siderealLon) {
   return Math.floor(normalizeDeg(siderealLon) / 30);
 }
 
@@ -108,7 +108,7 @@ function getDegreeInSign(siderealLon) {
   return normalizeDeg(siderealLon) % 30;
 }
 
-function getNakshatraFromLon(siderealLon) {
+export function getNakshatraFromLon(siderealLon) {
   const lon = normalizeDeg(siderealLon);
   const nakSpan = 360 / 27; // 13.3333...°
   const index = Math.floor(lon / nakSpan) % 27;
@@ -144,7 +144,7 @@ function addYearsToDate(date, years) {
 // LAHIRI AYANAMSA
 // ============================================================
 
-function getLahiriAyanamsa(date) {
+export function getLahiriAyanamsa(date) {
   // Lahiri ayanamsa calculation
   // Reference epoch: J2000.0 (Jan 1.5, 2000 TT)
   // Ayanamsa at J2000.0 ≈ 23°51'11" = 23.85306°
@@ -160,17 +160,17 @@ function getLahiriAyanamsa(date) {
 // (Using astronomy-engine for accurate ephemeris)
 // ============================================================
 
-function getSunLongitude(date) {
+export function getSunLongitude(date) {
   const pos = Astronomy.SunPosition(date);
   return pos.elon;
 }
 
-function getMoonLongitude(date) {
+export function getMoonLongitude(date) {
   const pos = Astronomy.EclipticGeoMoon(date);
   return pos.lon;
 }
 
-function getPlanetLongitude(bodyName, date) {
+export function getPlanetLongitude(bodyName, date) {
   const bodyMap = {
     Mercury: Astronomy.Body.Mercury,
     Venus: Astronomy.Body.Venus,
@@ -180,10 +180,15 @@ function getPlanetLongitude(bodyName, date) {
   };
   const body = bodyMap[bodyName];
   if (!body) throw new Error(`Unknown body: ${bodyName}`);
-  return Astronomy.EclipticLongitude(body, date);
+  // Use GeoVector + Ecliptic for correct GEOCENTRIC ecliptic longitude.
+  // EclipticLongitude() returns heliocentric positions which are wrong
+  // for birth chart calculations (e.g., Mercury 130° from Sun).
+  const vec = Astronomy.GeoVector(body, date, true);
+  const ecl = Astronomy.Ecliptic(vec);
+  return ecl.elon;
 }
 
-function getMeanLunarNode(date) {
+export function getMeanLunarNode(date) {
   // Mean longitude of Moon's ascending node (Rahu)
   // Based on Meeus astronomical algorithms
   const j2000 = Date.UTC(2000, 0, 1, 12, 0, 0);

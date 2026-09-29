@@ -31,10 +31,20 @@ export const PRICING = {
   health: { name: "Health & Wellness Report", price: 49, icon: "🏥" },
   varshphal: { name: "Annual Varshphal Report", price: 149, icon: "📅" },
   education: { name: "Education & Exam Report", price: 49, icon: "📚" },
-  complete: { name: "Complete Life Report Bundle", price: 299, originalPrice: 466, icon: "✨" },
+  complete: { name: "Complete Life Report Bundle", price: 399, originalPrice: 620, icon: "✨" },
+  gemstone: { name: "Gemstone Recommendation Report", price: 49, icon: "💎" },
+  child: { name: "Child & Progeny Report", price: 49, icon: "👶" },
+  property: { name: "Property & Real Estate Report", price: 49, icon: "🏠" },
+  foreign: { name: "Foreign Travel & Settlement Report", price: 49, icon: "✈️" },
+  sadesati: { name: "Sade Sati & Saturn Report", price: 49, icon: "🪐" },
   matching: { name: "Kundli Matching", price: 79, icon: "💍" },
+  businessMatching: { name: "Business Compatibility", price: 79, icon: "🤝" },
+  friendshipMatching: { name: "Friendship Compatibility", price: 79, icon: "👫" },
   muhurat: { name: "Shubh Muhurat", price: 29, icon: "🕐" },
   question: { name: "Ask a Question", price: 29, icon: "❓" },
+  numerology: { name: "Numerology Report", price: 49, icon: "🔢" },
+  remedies: { name: "Detailed Remedies", price: 49, icon: "💎" },
+  transits: { name: "Transit Interpretation", price: 49, icon: "🔄" },
   subscription: { name: "Premium Monthly", price: 199, icon: "👑" },
 };
 
@@ -61,6 +71,23 @@ export const SIGNS = [
   "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces",
 ];
 
+// ── Astrologer Marketplace ──
+
+export const SPECIALIZATIONS = [
+  "Vedic Astrology",
+  "Numerology",
+  "Palmistry",
+  "Tarot",
+  "Vastu",
+  "KP Astrology",
+  "Nadi Astrology",
+  "Prashna Kundli",
+];
+
+export const CHAT_DURATION = 120; // 2 minutes in seconds
+export const CHAT_POLL_INTERVAL = 1500; // 1.5 seconds
+export const PLATFORM_COMMISSION = 0.05; // 5%
+
 const LANG_KEY_MAP = { en: 'nameEn', hi: 'nameHi', mr: 'nameMr' };
 
 export function getRashiName(rashi, lang = 'en') {
@@ -73,4 +100,17 @@ export function getPlanetName(planet, lang = 'en') {
   const key = LANG_KEY_MAP[lang] || 'nameEn';
   const found = PLANETS.find(p => p.id === planet || p.nameEn === planet);
   return found ? (found[key] || found.nameEn) : planet;
+}
+
+/**
+ * Returns discounted price for a report type if a festival offer is active.
+ * Must be called with an offer object from getActiveFestivalOffer().
+ */
+export function getDiscountedPrice(reportType, festivalOffer) {
+  if (!festivalOffer?.active) return null;
+  const item = PRICING[reportType];
+  if (!item) return null;
+  const original = item.price;
+  const discounted = Math.round(original * (1 - festivalOffer.discount / 100));
+  return { original, discounted, discount: festivalOffer.discount, festival: festivalOffer.festival };
 }

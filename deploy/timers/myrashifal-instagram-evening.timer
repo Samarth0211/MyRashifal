@@ -1,0 +1,11 @@
+[Unit]
+Description=MyRashifal instagram-evening schedule
+
+[Timer]
+OnCalendar=*-*-* 12:30:00 UTC
+Persistent=false
+AccuracySec=1s
+Unit=myrashifal-cron@instagram-evening.service
+
+[Install]
+WantedBy=timers.target

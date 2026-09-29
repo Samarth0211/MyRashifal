@@ -22,8 +22,7 @@ export default function Testimonials() {
   }, []);
 
   return (
-    <div className="max-w-3xl mx-auto">
-      {/* Cards */}
+    <div className="max-w-2xl mx-auto">
       <div className="relative overflow-hidden">
         <div
           className="flex transition-transform duration-500 ease-in-out"
@@ -31,18 +30,27 @@ export default function Testimonials() {
         >
           {TESTIMONIAL_IDS.map((item, i) => (
             <div key={i} className="w-full flex-shrink-0 px-4">
-              <div className="card-mystical text-center">
+              <div className="text-center py-4">
                 {/* Stars */}
-                <div className="text-gold-primary mb-3">
-                  {'★'.repeat(item.rating)}{'☆'.repeat(5 - item.rating)}
+                <div className="flex items-center justify-center gap-1 mb-5">
+                  {Array.from({ length: 5 }).map((_, s) => (
+                    <svg
+                      key={s}
+                      className={`w-4 h-4 ${s < item.rating ? 'text-gold-primary' : 'text-text-secondary/20'}`}
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
                 </div>
                 {/* Quote */}
-                <p className="text-text-primary italic mb-4 leading-relaxed">
+                <p className="text-text-primary text-base leading-relaxed mb-6 max-w-lg mx-auto">
                   &ldquo;{t(`testimonial.${item.id}.text`)}&rdquo;
                 </p>
                 {/* Author */}
-                <p className="text-gold-light font-medium">{t(`testimonial.${item.id}.name`)}</p>
-                <p className="text-text-secondary text-sm">{t(`testimonial.${item.id}.location`)}</p>
+                <p className="text-text-primary font-medium text-sm">{t(`testimonial.${item.id}.name`)}</p>
+                <p className="text-text-secondary text-xs mt-0.5">{t(`testimonial.${item.id}.location`)}</p>
               </div>
             </div>
           ))}
@@ -50,13 +58,13 @@ export default function Testimonials() {
       </div>
 
       {/* Dots */}
-      <div className="flex justify-center gap-2 mt-6">
+      <div className="flex justify-center gap-1.5 mt-6">
         {TESTIMONIAL_IDS.map((_, i) => (
           <button
             key={i}
             onClick={() => setCurrent(i)}
-            className={`h-3 rounded-full transition-all ${
-              i === current ? 'bg-gold-primary w-8' : 'bg-border-custom w-3'
+            className={`h-1.5 rounded-full transition-all ${
+              i === current ? 'bg-gold-primary w-6' : 'bg-white/10 w-1.5'
             }`}
             style={{ touchAction: 'manipulation' }}
             aria-label={`Go to testimonial ${i + 1}`}

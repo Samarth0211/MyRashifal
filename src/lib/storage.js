@@ -107,3 +107,13 @@ export function getReport(reportType) {
 export function getAllReports() {
   return safeGet(REPORTS_KEY) || {};
 }
+
+// Clear unscoped purchases & reports from localStorage
+// Called when DB data loads for authenticated users to prevent stale cross-account data
+export function clearLocalPurchasesAndReports() {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.removeItem(PURCHASES_KEY);
+    localStorage.removeItem(REPORTS_KEY);
+  } catch {}
+}

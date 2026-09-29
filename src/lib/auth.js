@@ -19,6 +19,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
+        if (process.env.NODE_ENV !== 'development') return null;
         if (credentials.username === 'testuser' && credentials.password === 'test1234') {
           return { id: 'test-user-001', name: 'Test User', email: 'test@myrashifal.in' };
         }
@@ -30,9 +31,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     strategy: 'jwt',
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       if (user) {
         token.userId = user.id;
+      }
+      // Resolve role on sign-in or when missing
+      if (!token.role || trigger === 'signIn') {
+        const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase());
+        if (token.email && adminEmails.includes(token.email.toLowerCase())) {
+          token.role = 'admin';
+        } else {
+          try {
+            const client = await clientPromise;
+            const db = client.db('myrashifal');
+            const astrologer = await db.collection('astrologers').findOne({
+              userId: token.userId || token.sub,
+              status: 'approved',
+            });
+            token.role = astrologer ? 'astrologer' : 'user';
+          } catch {
+            token.role = 'user';
+          }
+        }
       }
       return token;
     },
@@ -40,6 +60,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (token?.userId) {
         session.user.id = token.userId;
       }
+      session.user.role = token.role || 'user';
       return session;
     },
   },
